@@ -1,0 +1,366 @@
+:root {
+  font-family: 'Open Sans', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #2a1a1a;
+  background-color: #f5f5fd;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  font-weight: 500;
+  color: #380000;
+  text-decoration: none;
+}
+a:hover {
+  color: #5a1010;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 2em;
+  line-height: 1.2;
+  margin: 0 0 0.5em;
+  color: #2a1a1a;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin: 0 0 0.5em;
+  color: #2a1a1a;
+}
+
+button,
+.button {
+  border-radius: 8px;
+  border: 1px solid #d9d1b8;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #f0ead8;
+  color: #2a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s, background-color 0.25s;
+  display: inline-block;
+  text-decoration: none;
+}
+button:hover,
+.button:hover {
+  border-color: #380000;
+  background-color: #e6dfca;
+}
+button:focus,
+button:focus-visible,
+.button:focus,
+.button:focus-visible {
+  outline: 2px solid #380000;
+  outline-offset: 2px;
+}
+button.primary,
+.button.primary {
+  background-color: #380000;
+  color: #f5f5fd;
+  border-color: #380000;
+}
+button.primary:hover,
+.button.primary:hover {
+  background-color: #2a0000;
+  border-color: #2a0000;
+}
+button.danger {
+  background-color: #380000;
+  color: #f5f5fd;
+  border-color: #380000;
+}
+button.danger:hover {
+  background-color: #2a0000;
+  border-color: #2a0000;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: 1em;
+  padding: 0.5em 0.75em;
+  border-radius: 6px;
+  border: 1px solid #d9d1b8;
+  background-color: #fff;
+  color: #2a1a1a;
+  width: 100%;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #380000;
+  border-color: #380000;
+}
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Layout */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #053742;
+  border-bottom: 1px solid #d9d1b8;
+}
+.navbar-brand {
+  font-size: 1.25em;
+  font-weight: 700;
+  color: #e5e5e5;
+}
+.navbar-brand:hover {
+  color: #fff;
+}
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+.nav-link {
+  padding: 0.25em 0.5em;
+  border-radius: 4px;
+  color: #e6e0e0;
+  font-weight: 400;
+}
+.nav-link:hover,
+.nav-link.active {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.card {
+  background-color: #fff;
+  border: 1px solid #d9d1b8;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: border-color 0.2s;
+}
+.card:hover {
+  border-color: #380000;
+}
+.card h3 {
+  margin: 0 0 0.5em;
+  color: #2a1a1a;
+}
+.card p {
+  margin: 0;
+  color: #6a5a5a;
+  font-size: 0.9em;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.25em;
+  font-weight: 500;
+}
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Weekly Grid */
+.weekly-grid {
+  display: grid;
+  grid-template-columns: auto repeat(7, 1fr);
+  gap: 2px;
+  background-color: #d9d1b8;
+  border: 1px solid #d9d1b8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.grid-header {
+  background-color: #f0ead8;
+  padding: 0.5rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85em;
+  color: #2a1a1a;
+}
+.grid-label {
+  background-color: #f0ead8;
+  padding: 0.5rem;
+  font-weight: 500;
+  font-size: 0.85em;
+  display: flex;
+  align-items: center;
+  color: #2a1a1a;
+}
+.menu-slot {
+  background-color: #f5f5fd;
+  padding: 0.5rem;
+  min-height: 60px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  font-size: 0.85em;
+}
+.menu-slot:hover {
+  background-color: #eeeef6;
+}
+.menu-slot.filled {
+  background-color: #f7f3e6;
+}
+.menu-slot .slot-name {
+  font-weight: 500;
+  color: #2a1a1a;
+}
+.menu-slot .slot-notes {
+  color: #7a6a6a;
+  font-size: 0.8em;
+  margin-top: 0.25em;
+}
+
+/* Picker overlay */
+.picker-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(56, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.picker-content {
+  background-color: #f5f5fd;
+  border: 1px solid #d9d1b8;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 90%;
+  max-width: 450px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.picker-content h3 {
+  margin: 0 0 1rem;
+}
+.picker-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.picker-list li {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.picker-list li:hover {
+  background-color: rgba(56, 0, 0, 0.06);
+}
+
+/* Confirm Dialog */
+.confirm-dialog {
+  background-color: #f5f5fd;
+  border: 1px solid #d9d1b8;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 380px;
+  text-align: center;
+}
+.confirm-dialog p {
+  margin: 0 0 1.5rem;
+  font-size: 1.1em;
+}
+.confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* Day Cards */
+.day-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.day-card {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.day-card h3 {
+  min-width: 100px;
+  margin: 0;
+}
+.day-card p {
+  margin: 0;
+}
+.day-card-active {
+  border-color: #380000;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.day-detail {
+  background-color: #fff;
+  border: 1px solid #380000;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-top: -0.75rem;
+  margin-bottom: 0;
+}
+.day-detail h2 {
+  margin-top: 0;
+}
+.day-detail pre {
+  margin: 0;
+  font-family: inherit;
+  color: #5a4a4a;
+}
+
+/* Utilities */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #7a6a6a;
+}

@@ -43,3 +43,7 @@ public record SetMenuItemDto(
 
 public record SetMenuItemsDto(
     List<SetMenuItemDto> Items);
+
+public record GenerateMenuDto(
+    string? Name,
+    DateOnly? StartDate);

@@ -41,7 +41,7 @@ export interface CreateRecipe {
   instructions: string;
 }
 
-export interface UpdateRecipe extends CreateRecipe {}
+export type UpdateRecipe = CreateRecipe
 
 export interface MenuItem {
   id: number;
@@ -92,4 +92,13 @@ export interface AiSuggestion {
   name: string;
   description: string;
   suggestedMealType: MealType;
+}
+
+export interface AppSettings {
+  hasApiKey: boolean;
+  updatedAt: string;
+}
+
+export interface UpdateSettings {
+  anthropicApiKey: string;
 }

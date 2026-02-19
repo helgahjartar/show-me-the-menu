@@ -5,6 +5,7 @@ import RecipesPage from "./pages/RecipesPage";
 import RecipeCreatePage from "./pages/RecipeCreatePage";
 import RecipeDetailPage from "./pages/RecipeDetailPage";
 import MenuDetailPage from "./pages/MenuDetailPage";
+import SettingsPage from "./pages/SettingsPage";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/recipes/new" element={<RecipeCreatePage />} />
         <Route path="/recipes/:id" element={<RecipeDetailPage />} />
         <Route path="/menus/:id" element={<MenuDetailPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
     </Routes>
   );

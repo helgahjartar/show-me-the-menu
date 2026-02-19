@@ -35,3 +35,7 @@ export function setMenuItems(
 ): Promise<WeeklyMenu> {
   return apiPut<WeeklyMenu>(`/menus/${id}/items`, { items });
 }
+
+export function generateMenu(): Promise<WeeklyMenu> {
+  return apiPost<WeeklyMenu>("/menus/generate", {});
+}

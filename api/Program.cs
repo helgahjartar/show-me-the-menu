@@ -16,6 +16,9 @@ builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IWeeklyMenuService, WeeklyMenuService>();
 builder.Services.AddSingleton<IAiSuggestionService, AiSuggestionService>();
 
+builder.Services.AddScoped<ISettingsService, SettingsService>();
+builder.Services.AddScoped<IMenuGenerationService, MenuGenerationService>();
+
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -53,5 +56,6 @@ app.MapGet("/api/health", () => Results.Ok(new { status = "healthy" }))
 app.MapRecipeEndpoints();
 app.MapWeeklyMenuEndpoints();
 app.MapAiEndpoints();
+app.MapSettingsEndpoints();
 
 app.Run();

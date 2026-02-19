@@ -37,5 +37,18 @@ public static class WeeklyMenuEndpoints
             await service.SetItemsAsync(id, dto) is { } menu
                 ? Results.Ok(menu)
                 : Results.NotFound());
+
+        group.MapPost("/generate", async (GenerateMenuDto? dto, IMenuGenerationService generationService) =>
+        {
+            try
+            {
+                var result = await generationService.GenerateAsync(dto ?? new GenerateMenuDto(null, null));
+                return Results.Created($"/api/menus/{result.Id}", result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
+        });
     }
 }

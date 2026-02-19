@@ -10,9 +10,18 @@ public class AppDbContext : DbContext
     public DbSet<Recipe> Recipes => Set<Recipe>();
     public DbSet<WeeklyMenu> WeeklyMenus => Set<WeeklyMenu>();
     public DbSet<MenuItem> MenuItems => Set<MenuItem>();
+    public DbSet<AppSettings> AppSettings => Set<AppSettings>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AppSettings>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.AnthropicApiKey).HasMaxLength(200);
+            entity.HasData(new AppSettings { Id = 1, UpdatedAt = DateTime.UnixEpoch });
+        });
+
+
         modelBuilder.Entity<Recipe>(entity =>
         {
             entity.HasKey(e => e.Id);

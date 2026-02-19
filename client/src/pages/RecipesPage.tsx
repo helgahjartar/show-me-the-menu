@@ -3,6 +3,7 @@ import type { Recipe, CreateRecipe } from "../types";
 import { fetchRecipes, createRecipe } from "../api/recipes";
 import RecipeCard from "../components/RecipeCard";
 import RecipeForm from "../components/RecipeForm";
+import { btn, btnPrimary } from "../utils/styles";
 
 export default function RecipesPage() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -25,31 +26,31 @@ export default function RecipesPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <h1>Recipes</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl leading-tight m-0">Recipes</h1>
         {!showForm && (
-          <button className="primary" onClick={() => setShowForm(true)}>
+          <button className={btnPrimary} onClick={() => setShowForm(true)}>
             New Recipe
           </button>
         )}
       </div>
 
       {showForm && (
-        <div className="card" style={{ marginBottom: "1.5rem" }}>
-          <h2>New Recipe</h2>
+        <div className="bg-white border border-border rounded-lg p-4 mb-6">
+          <h2 className="text-2xl m-0 mb-2">New Recipe</h2>
           <RecipeForm onSubmit={handleCreate} submitLabel="Create Recipe" />
-          <div className="form-actions">
-            <button onClick={() => setShowForm(false)}>Cancel</button>
+          <div className="flex gap-3 mt-6">
+            <button className={btn} onClick={() => setShowForm(false)}>Cancel</button>
           </div>
         </div>
       )}
 
       {recipes.length === 0 && !showForm ? (
-        <div className="empty-state">
+        <div className="text-center py-12 px-4 text-text-light">
           <p>No recipes yet. Create your first one!</p>
         </div>
       ) : (
-        <div className="card-grid">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
           {recipes.map((r) => (
             <RecipeCard key={r.id} recipe={r} />
           ))}

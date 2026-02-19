@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { CreateRecipe } from "../types";
+import { btnPrimary, input, textarea } from "../utils/styles";
 
 interface Props {
   initial?: CreateRecipe;
@@ -31,20 +32,26 @@ export default function RecipeForm({ initial, onSubmit, submitLabel }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="form-group">
-        <label htmlFor="name">Title</label>
+      <div className="mb-4">
+        <label htmlFor="name" className="block mb-1 font-medium">
+          Title
+        </label>
         <input
           id="name"
+          className={input}
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Recipe title"
           required
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="text">Recipe</label>
+      <div className="mb-4">
+        <label htmlFor="text" className="block mb-1 font-medium">
+          Recipe
+        </label>
         <textarea
           id="text"
+          className={textarea}
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Ingredients, instructions, notes..."
@@ -52,8 +59,8 @@ export default function RecipeForm({ initial, onSubmit, submitLabel }: Props) {
           required
         />
       </div>
-      <div className="form-actions">
-        <button type="submit" className="primary" disabled={!valid}>
+      <div className="flex gap-3 mt-6">
+        <button type="submit" className={btnPrimary} disabled={!valid}>
           {submitLabel}
         </button>
       </div>

@@ -13,7 +13,7 @@ export default function RecipeCreatePage() {
 
   return (
     <div>
-      <h1>New Recipe</h1>
+      <h1 className="text-3xl leading-tight m-0 mb-4">New Recipe</h1>
       <RecipeForm onSubmit={handleSubmit} submitLabel="Create Recipe" />
     </div>
   );

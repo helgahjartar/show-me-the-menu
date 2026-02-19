@@ -4,6 +4,7 @@ import type { Recipe, CreateRecipe } from "../types";
 import { fetchRecipe, updateRecipe, deleteRecipe } from "../api/recipes";
 import RecipeForm from "../components/RecipeForm";
 import ConfirmDialog from "../components/ConfirmDialog";
+import { btn, btnDanger } from "../utils/styles";
 
 export default function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -36,7 +37,7 @@ export default function RecipeDetailPage() {
   if (editing) {
     return (
       <div>
-        <h1>Edit Recipe</h1>
+        <h1 className="text-3xl leading-tight m-0 mb-4">Edit Recipe</h1>
         <RecipeForm
           initial={{
             name: recipe.name,
@@ -47,8 +48,8 @@ export default function RecipeDetailPage() {
           onSubmit={handleUpdate}
           submitLabel="Save Changes"
         />
-        <div className="form-actions">
-          <button onClick={() => setEditing(false)}>Cancel</button>
+        <div className="flex gap-3 mt-6">
+          <button className={btn} onClick={() => setEditing(false)}>Cancel</button>
         </div>
       </div>
     );
@@ -56,16 +57,16 @@ export default function RecipeDetailPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <h1>{recipe.name}</h1>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <button onClick={() => setEditing(true)}>Edit</button>
-          <button className="danger" onClick={() => setShowDeleteConfirm(true)}>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl leading-tight m-0">{recipe.name}</h1>
+        <div className="flex gap-2">
+          <button className={btn} onClick={() => setEditing(true)}>Edit</button>
+          <button className={btnDanger} onClick={() => setShowDeleteConfirm(true)}>
             Delete
           </button>
         </div>
       </div>
-      <pre style={{ whiteSpace: "pre-wrap" }}>
+      <pre className="whitespace-pre-wrap m-0 font-[inherit] text-text-light">
         {[recipe.description, recipe.ingredients, recipe.instructions]
           .filter(Boolean)
           .join("\n\n")}

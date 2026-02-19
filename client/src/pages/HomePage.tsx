@@ -1,23 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { WeeklyMenuSummary } from "../types";
-import { MealType } from "../types";
-import { fetchMenus, createMenu, setMenuItems } from "../api/menus";
-import { fetchRecipes } from "../api/recipes";
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+import { fetchMenus, generateMenu } from "../api/menus";
+import { btnPrimary } from "../utils/styles";
 
 export default function HomePage() {
   const [menus, setMenus] = useState<WeeklyMenuSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,40 +19,14 @@ export default function HomePage() {
 
   const handleCreate = async () => {
     setGenerating(true);
+    setError(null);
     try {
-      const recipes = await fetchRecipes();
-      if (recipes.length === 0) {
-        alert("Add some recipes first before generating a menu!");
-        return;
-      }
-
-      const today = new Date();
-      const day = today.getDay();
-      const daysUntilMonday = day === 0 ? 1 : day === 1 ? 0 : 8 - day;
-      const monday = new Date(today);
-      monday.setDate(today.getDate() + daysUntilMonday);
-
-      const startDate = monday.toISOString().split("T")[0];
-      const name = `Week of ${monday.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`;
-
-      const menu = await createMenu({ name, startDate });
-
-      // Pick 7 random recipes (repeat if fewer than 7)
-      const shuffled = shuffle(recipes);
-      const picked = Array.from({ length: 7 }, (_, i) => shuffled[i % shuffled.length]);
-
-      await setMenuItems(
-        menu.id,
-        picked.map((r, i) => ({
-          dayOfWeek: i,
-          mealType: MealType.Dinner,
-          recipeId: r.id,
-          customName: r.name,
-          notes: null,
-        })),
-      );
-
+      const menu = await generateMenu();
       navigate(`/menus/${menu.id}`);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Failed to generate menu";
+      setError(message);
     } finally {
       setGenerating(false);
     }
@@ -71,27 +36,32 @@ export default function HomePage() {
 
   return (
     <div>
-      <div className="page-header">
-        <h1>Weekly Menus</h1>
-        <button className="primary" onClick={handleCreate} disabled={generating}>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl leading-tight m-0">Weekly Menus</h1>
+        <button className={btnPrimary} onClick={handleCreate} disabled={generating}>
           {generating ? "Generating..." : "Generate new weekly menu"}
         </button>
       </div>
+      {error && (
+        <div className="text-red-700 bg-red-50 px-4 py-3 rounded-lg mb-4">
+          {error}
+        </div>
+      )}
       {menus.length === 0 ? (
-        <div className="empty-state">
+        <div className="text-center py-12 px-4 text-text-light">
           <p>No menus yet. Generate your first weekly menu!</p>
         </div>
       ) : (
-        <div className="card-grid">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
           {menus.map((m) => (
             <Link
               key={m.id}
               to={`/menus/${m.id}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+              className="no-underline text-inherit"
             >
-              <div className="card">
-                <h3>{m.name}</h3>
-                <p>
+              <div className="bg-white border border-border rounded-lg p-4 transition-colors hover:border-accent">
+                <h3 className="m-0 mb-2 text-text">{m.name}</h3>
+                <p className="m-0 text-text-muted text-sm">
                   Starts {m.startDate} &middot; {m.itemCount} meals planned
                 </p>
               </div>

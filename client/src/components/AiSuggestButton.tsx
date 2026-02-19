@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { MealType, AiSuggestion } from "../types";
 import { MealTypeLabels } from "../types";
 import { fetchSuggestions } from "../api/ai";
+import { btn, btnPrimary } from "../utils/styles";
 
 interface Props {
   onFillSlots: (suggestions: { mealType: MealType; name: string }[]) => void;
@@ -37,31 +38,31 @@ export default function AiSuggestButton({ onFillSlots }: Props) {
 
   if (suggestions) {
     return (
-      <div className="card" style={{ marginBottom: "1rem" }}>
+      <div className="bg-white border border-border rounded-lg p-4 mb-4">
         <h3>AI Suggestions</h3>
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul className="list-none p-0">
           {suggestions.map((s, i) => (
-            <li key={i} style={{ marginBottom: "0.5em" }}>
+            <li key={i} className="mb-2">
               <strong>{s.name}</strong> ({MealTypeLabels[s.suggestedMealType]})
               <br />
-              <span style={{ fontSize: "0.85em", opacity: 0.7 }}>
+              <span className="text-[0.85em] opacity-70">
                 {s.description}
               </span>
             </li>
           ))}
         </ul>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <button className="primary" onClick={applySuggestions}>
+        <div className="flex gap-2">
+          <button className={btnPrimary} onClick={applySuggestions}>
             Fill Empty Slots
           </button>
-          <button onClick={() => setSuggestions(null)}>Dismiss</button>
+          <button className={btn} onClick={() => setSuggestions(null)}>Dismiss</button>
         </div>
       </div>
     );
   }
 
   return (
-    <button onClick={handleSuggest} disabled={loading}>
+    <button className={btn} onClick={handleSuggest} disabled={loading}>
       {loading ? "Thinking..." : "AI Suggest"}
     </button>
   );

@@ -44,11 +44,11 @@ export default function WeeklyGrid({ items, onChange }: Props) {
 
   return (
     <>
-      <div className="weekly-grid">
+      <div className="grid grid-cols-[auto_repeat(7,1fr)] gap-0.5 bg-border border border-border rounded-lg overflow-hidden">
         {/* Header row */}
-        <div className="grid-header" />
+        <div className="bg-btn-bg p-2 text-center font-semibold text-[0.85em] text-text" />
         {DayLabels.map((day, i) => (
-          <div key={i} className="grid-header">
+          <div key={i} className="bg-btn-bg p-2 text-center font-semibold text-[0.85em] text-text">
             {day.slice(0, 3)}
           </div>
         ))}
@@ -56,7 +56,7 @@ export default function WeeklyGrid({ items, onChange }: Props) {
         {/* Meal rows */}
         {MEAL_TYPES.map((mealType) => (
           <>
-            <div key={`label-${mealType}`} className="grid-label">
+            <div key={`label-${mealType}`} className="bg-btn-bg p-2 font-medium text-[0.85em] flex items-center text-text">
               {MealTypeLabels[mealType]}
             </div>
             {DayLabels.map((_, dayIdx) => (

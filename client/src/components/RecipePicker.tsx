@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Recipe, SetMenuItem, MealType } from "../types";
 import { DayLabels, MealTypeLabels } from "../types";
 import { fetchRecipes } from "../api/recipes";
+import { btn, btnPrimary, btnDanger, input } from "../utils/styles";
 
 interface Props {
   dayOfWeek: number;
@@ -55,21 +56,21 @@ export default function RecipePicker({
   };
 
   return (
-    <div className="picker-overlay" onClick={onClose}>
-      <div className="picker-content" onClick={(e) => e.stopPropagation()}>
-        <h3>
+    <div className="fixed inset-0 bg-accent/40 flex items-center justify-center z-100" onClick={onClose}>
+      <div className="bg-bg border border-border rounded-xl p-6 w-[90%] max-w-[450px] max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <h3 className="m-0 mb-4">
           {DayLabels[dayOfWeek]} - {MealTypeLabels[mealType]}
         </h3>
 
-        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+        <div className="flex gap-2 mb-4">
           <button
-            className={mode === "pick" ? "primary" : ""}
+            className={mode === "pick" ? btnPrimary : btn}
             onClick={() => setMode("pick")}
           >
             From Recipes
           </button>
           <button
-            className={mode === "custom" ? "primary" : ""}
+            className={mode === "custom" ? btnPrimary : btn}
             onClick={() => setMode("custom")}
           >
             Custom
@@ -78,13 +79,13 @@ export default function RecipePicker({
 
         {mode === "pick" ? (
           recipes.length === 0 ? (
-            <p style={{ color: "rgba(255,255,255,0.5)" }}>
+            <p className="text-text-muted">
               No recipes yet. Create some first!
             </p>
           ) : (
-            <ul className="picker-list">
+            <ul className="list-none p-0 mb-4">
               {recipes.map((r) => (
-                <li key={r.id} onClick={() => selectRecipe(r)}>
+                <li key={r.id} className="px-3 py-2 rounded-md cursor-pointer hover:bg-accent/5" onClick={() => selectRecipe(r)}>
                   {r.name}
                 </li>
               ))}
@@ -92,40 +93,43 @@ export default function RecipePicker({
           )
         ) : (
           <div>
-            <div className="form-group">
-              <label htmlFor="customName">Name</label>
+            <div className="mb-4">
+              <label htmlFor="customName" className="block mb-1 font-medium">
+                Name
+              </label>
               <input
                 id="customName"
+                className={input}
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
                 placeholder='e.g. "Leftovers", "Eating out"'
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="notes">Notes (optional)</label>
+            <div className="mb-4">
+              <label htmlFor="notes" className="block mb-1 font-medium">
+                Notes (optional)
+              </label>
               <input
                 id="notes"
+                className={input}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Any notes"
               />
             </div>
-            <button className="primary" onClick={saveCustom}>
+            <button className={btnPrimary} onClick={saveCustom}>
               Set
             </button>
           </div>
         )}
 
-        <div
-          className="form-actions"
-          style={{ justifyContent: "space-between" }}
-        >
+        <div className="flex gap-3 mt-6 justify-between">
           {current && (
-            <button className="danger" onClick={clear}>
+            <button className={btnDanger} onClick={clear}>
               Clear Slot
             </button>
           )}
-          <button onClick={onClose}>Cancel</button>
+          <button className={btn} onClick={onClose}>Cancel</button>
         </div>
       </div>
     </div>

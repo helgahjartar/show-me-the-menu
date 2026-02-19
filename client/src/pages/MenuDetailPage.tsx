@@ -5,6 +5,7 @@ import { DayLabels } from "../types";
 import { fetchMenu, deleteMenu } from "../api/menus";
 import { fetchRecipe } from "../api/recipes";
 import ConfirmDialog from "../components/ConfirmDialog";
+import { btnDanger } from "../utils/styles";
 
 export default function MenuDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -56,14 +57,14 @@ export default function MenuDetailPage() {
 
   return (
     <div>
-      <div className="page-header">
-        <h1>{menu.name}</h1>
-        <button className="danger" onClick={() => setShowDeleteConfirm(true)}>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl leading-tight m-0">{menu.name}</h1>
+        <button className={btnDanger} onClick={() => setShowDeleteConfirm(true)}>
           Delete
         </button>
       </div>
 
-      <div className="day-cards">
+      <div className="flex flex-col gap-3">
         {DayLabels.map((dayName, dayIdx) => {
           const item = dayItems.get(dayIdx);
           const isSelected = selectedDay === dayIdx;
@@ -71,19 +72,21 @@ export default function MenuDetailPage() {
           return (
             <div key={dayIdx}>
               <div
-                className={`card day-card ${isSelected ? "day-card-active" : ""}`}
+                className={`bg-white border border-border rounded-lg p-4 cursor-pointer flex items-center gap-6 transition-colors hover:border-accent ${
+                  isSelected ? "border-accent rounded-b-none" : ""
+                }`}
                 onClick={() => handleDayClick(dayIdx, item?.recipeId ?? null)}
               >
-                <h3>{dayName}</h3>
-                <p>{item?.customName ?? item?.recipeName ?? "No meal planned"}</p>
+                <h3 className="min-w-[100px] m-0">{dayName}</h3>
+                <p className="m-0">{item?.customName ?? item?.recipeName ?? "No meal planned"}</p>
               </div>
 
               {isSelected && (
-                <div className="day-detail">
+                <div className="bg-white border border-accent border-t-0 rounded-b-lg px-6 py-4 -mt-3 mb-0">
                   {loadingRecipe ? (
                     <p>Loading recipe...</p>
                   ) : selectedRecipe ? (
-                    <pre style={{ whiteSpace: "pre-wrap" }}>
+                    <pre className="whitespace-pre-wrap m-0 font-[inherit] text-[#5a4a4a]">
                       {[selectedRecipe.description, selectedRecipe.ingredients, selectedRecipe.instructions]
                         .filter(Boolean)
                         .join("\n\n")}

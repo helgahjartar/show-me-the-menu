@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { WeeklyMenuSummary } from "../types";
 import { fetchMenus, generateMenu } from "../api/menus";
-import { btnPrimary } from "../utils/styles";
+import { btn, btnPrimary } from "../utils/styles";
 
 export default function HomePage() {
   const [menus, setMenus] = useState<WeeklyMenuSummary[]>([]);
@@ -24,8 +24,10 @@ export default function HomePage() {
       const menu = await generateMenu();
       navigate(`/menus/${menu.id}`);
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Failed to generate menu";
+      const raw = err instanceof Error ? err.message : "";
+      const message = raw.toLowerCase().includes("no recipes")
+        ? "You have no recipes yet — add some on the Recipes page before generating a menu."
+        : (raw || "Failed to generate menu");
       setError(message);
     } finally {
       setGenerating(false);
@@ -43,8 +45,14 @@ export default function HomePage() {
         </button>
       </div>
       {error && (
-        <div className="text-red-700 bg-red-50 px-4 py-3 rounded-lg mb-4">
-          {error}
+        <div className="fixed inset-0 bg-accent/40 flex items-center justify-center z-100" onClick={() => setError(null)}>
+          <div className="bg-bg border border-border rounded-xl p-8 w-[90%] max-w-[400px] text-center" onClick={(e) => e.stopPropagation()}>
+            <p className="m-0 mb-6 text-lg">{error}</p>
+            <div className="flex justify-center gap-3">
+              <button className={btn} onClick={() => setError(null)}>Cancel</button>
+              <button className={btnPrimary} onClick={() => navigate("/recipes")}>Go to Recipes</button>
+            </div>
+          </div>
         </div>
       )}
       {menus.length === 0 ? (

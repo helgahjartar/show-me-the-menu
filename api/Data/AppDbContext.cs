@@ -17,14 +17,16 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<AppSettings>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).HasMaxLength(128).IsRequired();
+            entity.HasIndex(e => e.UserId).IsUnique();
             entity.Property(e => e.AnthropicApiKey).HasMaxLength(200);
-            entity.HasData(new AppSettings { Id = 1, UpdatedAt = DateTime.UnixEpoch });
         });
-
 
         modelBuilder.Entity<Recipe>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).HasMaxLength(128).IsRequired();
+            entity.HasIndex(e => e.UserId);
             entity.Property(e => e.Name).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Description).HasMaxLength(1000);
             entity.Property(e => e.Ingredients).IsRequired();
@@ -34,6 +36,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<WeeklyMenu>(entity =>
         {
             entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).HasMaxLength(128).IsRequired();
+            entity.HasIndex(e => e.UserId);
             entity.Property(e => e.Name).HasMaxLength(200).IsRequired();
             entity.HasMany(e => e.Items)
                   .WithOne(e => e.WeeklyMenu)

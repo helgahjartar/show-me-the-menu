@@ -25,18 +25,18 @@ public class MenuGenerationService : IMenuGenerationService
         _logger = logger;
     }
 
-    public async Task<WeeklyMenuDto> GenerateAsync(GenerateMenuDto request)
+    public async Task<WeeklyMenuDto> GenerateAsync(GenerateMenuDto request, string userId)
     {
-        var recipes = await _recipeService.GetAllAsync();
+        var recipes = await _recipeService.GetAllAsync(userId);
         if (recipes.Count == 0)
             throw new InvalidOperationException("No recipes available to generate a menu.");
 
         var startDate = request.StartDate ?? GetNextMonday();
         var name = request.Name ?? $"Week of {startDate:MMM d}";
 
-        var menu = await _menuService.CreateAsync(new CreateWeeklyMenuDto(name, startDate));
+        var menu = await _menuService.CreateAsync(new CreateWeeklyMenuDto(name, startDate), userId);
 
-        var selectedIds = await PickRecipeIdsWithAi(recipes);
+        var selectedIds = await PickRecipeIdsWithAi(recipes, userId);
 
         // Fallback to random if AI fails or returns invalid IDs
         if (selectedIds == null || selectedIds.Count != 7)
@@ -60,15 +60,15 @@ public class MenuGenerationService : IMenuGenerationService
             Notes: null
         )).ToList();
 
-        var result = await _menuService.SetItemsAsync(menu.Id, new SetMenuItemsDto(items));
+        var result = await _menuService.SetItemsAsync(menu.Id, new SetMenuItemsDto(items), userId);
         return result!;
     }
 
-    private async Task<List<int>?> PickRecipeIdsWithAi(List<RecipeDto> recipes)
+    private async Task<List<int>?> PickRecipeIdsWithAi(List<RecipeDto> recipes, string userId)
     {
         try
         {
-            var apiKey = await _settingsService.GetApiKeyAsync();
+            var apiKey = await _settingsService.GetApiKeyAsync(userId);
             if (string.IsNullOrWhiteSpace(apiKey))
             {
                 _logger.LogInformation("No API key configured, skipping AI selection");

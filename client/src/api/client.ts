@@ -1,16 +1,32 @@
 const BASE = "/api";
 
+type TokenGetter = () => Promise<string>;
+
+let getToken: TokenGetter | null = null;
+
+export function initializeAuth(tokenGetter: TokenGetter) {
+  getToken = tokenGetter;
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    ...(init?.headers as Record<string, string>),
+  };
+
+  if (getToken) {
+    const token = await getToken();
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${BASE}${path}`, {
     ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...init?.headers,
-    },
+    headers,
   });
 
   if (!res.ok) {
-    throw new Error(`API error: ${res.status} ${res.statusText}`);
+    const body = await res.json().catch(() => null);
+    throw new Error(body?.error ?? `API error: ${res.status} ${res.statusText}`);
   }
 
   if (res.status === 204) return undefined as T;

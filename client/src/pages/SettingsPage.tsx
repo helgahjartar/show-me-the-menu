@@ -32,7 +32,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-[560px]">
+    <div className="max-w-140">
       <h1 className="text-3xl leading-tight m-0 mb-4">Settings</h1>
 
       <div className="bg-white border border-border rounded-lg p-4">

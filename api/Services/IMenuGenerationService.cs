@@ -4,5 +4,5 @@ namespace ShowMeTheMenu.Api.Services;
 
 public interface IMenuGenerationService
 {
-    Task<WeeklyMenuDto> GenerateAsync(GenerateMenuDto request);
+    Task<WeeklyMenuDto> GenerateAsync(GenerateMenuDto request, string userId);
 }

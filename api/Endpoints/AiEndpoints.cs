@@ -7,7 +7,7 @@ public static class AiEndpoints
 {
     public static void MapAiEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/api/ai").WithTags("AI");
+        var group = app.MapGroup("/api/ai").WithTags("AI").RequireAuthorization();
 
         group.MapPost("/suggest", async (AiSuggestRequestDto request, IAiSuggestionService service) =>
             Results.Ok(await service.SuggestAsync(request)));

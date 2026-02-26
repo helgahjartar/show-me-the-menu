@@ -4,7 +4,7 @@ namespace ShowMeTheMenu.Api.Services;
 
 public interface ISettingsService
 {
-    Task<AppSettingsDto> GetAsync();
-    Task<AppSettingsDto> UpdateAsync(UpdateSettingsDto dto);
-    Task<string?> GetApiKeyAsync();
+    Task<AppSettingsDto> GetAsync(string userId);
+    Task<AppSettingsDto> UpdateAsync(UpdateSettingsDto dto, string userId);
+    Task<string?> GetApiKeyAsync(string userId);
 }

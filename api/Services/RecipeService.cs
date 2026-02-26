@@ -7,25 +7,27 @@ namespace ShowMeTheMenu.Api.Services;
 
 public class RecipeService(AppDbContext db) : IRecipeService
 {
-    public async Task<List<RecipeDto>> GetAllAsync()
+    public async Task<List<RecipeDto>> GetAllAsync(string userId)
     {
         return await db.Recipes
+            .Where(r => r.UserId == userId)
             .OrderByDescending(r => r.UpdatedAt)
             .Select(r => ToDto(r))
             .ToListAsync();
     }
 
-    public async Task<RecipeDto?> GetByIdAsync(int id)
+    public async Task<RecipeDto?> GetByIdAsync(int id, string userId)
     {
-        var recipe = await db.Recipes.FindAsync(id);
+        var recipe = await db.Recipes.FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
         return recipe is null ? null : ToDto(recipe);
     }
 
-    public async Task<RecipeDto> CreateAsync(CreateRecipeDto dto)
+    public async Task<RecipeDto> CreateAsync(CreateRecipeDto dto, string userId)
     {
         var now = DateTime.UtcNow;
         var recipe = new Recipe
         {
+            UserId = userId,
             Name = dto.Name,
             Description = dto.Description,
             Ingredients = dto.Ingredients,
@@ -40,9 +42,9 @@ public class RecipeService(AppDbContext db) : IRecipeService
         return ToDto(recipe);
     }
 
-    public async Task<RecipeDto?> UpdateAsync(int id, UpdateRecipeDto dto)
+    public async Task<RecipeDto?> UpdateAsync(int id, UpdateRecipeDto dto, string userId)
     {
-        var recipe = await db.Recipes.FindAsync(id);
+        var recipe = await db.Recipes.FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
         if (recipe is null) return null;
 
         recipe.Name = dto.Name;
@@ -56,9 +58,9 @@ public class RecipeService(AppDbContext db) : IRecipeService
         return ToDto(recipe);
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, string userId)
     {
-        var recipe = await db.Recipes.FindAsync(id);
+        var recipe = await db.Recipes.FirstOrDefaultAsync(r => r.Id == id && r.UserId == userId);
         if (recipe is null) return false;
 
         db.Recipes.Remove(recipe);

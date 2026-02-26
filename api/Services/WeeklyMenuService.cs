@@ -7,30 +7,32 @@ namespace ShowMeTheMenu.Api.Services;
 
 public class WeeklyMenuService(AppDbContext db) : IWeeklyMenuService
 {
-    public async Task<List<WeeklyMenuSummaryDto>> GetAllAsync()
+    public async Task<List<WeeklyMenuSummaryDto>> GetAllAsync(string userId)
     {
         return await db.WeeklyMenus
+            .Where(m => m.UserId == userId)
             .OrderByDescending(m => m.StartDate)
             .Select(m => new WeeklyMenuSummaryDto(
                 m.Id, m.Name, m.StartDate, m.Items.Count, m.CreatedAt))
             .ToListAsync();
     }
 
-    public async Task<WeeklyMenuDto?> GetByIdAsync(int id)
+    public async Task<WeeklyMenuDto?> GetByIdAsync(int id, string userId)
     {
         var menu = await db.WeeklyMenus
             .Include(m => m.Items)
                 .ThenInclude(i => i.Recipe)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
 
         return menu is null ? null : ToDto(menu);
     }
 
-    public async Task<WeeklyMenuDto> CreateAsync(CreateWeeklyMenuDto dto)
+    public async Task<WeeklyMenuDto> CreateAsync(CreateWeeklyMenuDto dto, string userId)
     {
         var now = DateTime.UtcNow;
         var menu = new WeeklyMenu
         {
+            UserId = userId,
             Name = dto.Name,
             StartDate = dto.StartDate,
             CreatedAt = now,
@@ -43,12 +45,12 @@ public class WeeklyMenuService(AppDbContext db) : IWeeklyMenuService
         return ToDto(menu);
     }
 
-    public async Task<WeeklyMenuDto?> UpdateAsync(int id, UpdateWeeklyMenuDto dto)
+    public async Task<WeeklyMenuDto?> UpdateAsync(int id, UpdateWeeklyMenuDto dto, string userId)
     {
         var menu = await db.WeeklyMenus
             .Include(m => m.Items)
                 .ThenInclude(i => i.Recipe)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
 
         if (menu is null) return null;
 
@@ -61,9 +63,9 @@ public class WeeklyMenuService(AppDbContext db) : IWeeklyMenuService
         return ToDto(menu);
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id, string userId)
     {
-        var menu = await db.WeeklyMenus.FindAsync(id);
+        var menu = await db.WeeklyMenus.FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
         if (menu is null) return false;
 
         db.WeeklyMenus.Remove(menu);
@@ -72,11 +74,11 @@ public class WeeklyMenuService(AppDbContext db) : IWeeklyMenuService
         return true;
     }
 
-    public async Task<WeeklyMenuDto?> SetItemsAsync(int id, SetMenuItemsDto dto)
+    public async Task<WeeklyMenuDto?> SetItemsAsync(int id, SetMenuItemsDto dto, string userId)
     {
         var menu = await db.WeeklyMenus
             .Include(m => m.Items)
-            .FirstOrDefaultAsync(m => m.Id == id);
+            .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
 
         if (menu is null) return null;
 

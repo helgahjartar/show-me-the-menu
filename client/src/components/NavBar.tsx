@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function NavBar() {
   const { pathname } = useLocation();
+  const { user, logout } = useAuth0();
 
   const isActive = (path: string) =>
     pathname === path || pathname.startsWith(path + "/");
@@ -26,6 +28,17 @@ export default function NavBar() {
         <Link to="/settings" className={linkClass("/settings")}>
           Settings
         </Link>
+      </div>
+      <div className="ml-auto flex items-center gap-3">
+        {user && (
+          <span className="text-sm text-nav-text">{user.email}</span>
+        )}
+        <button
+          onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+          className="px-3 py-1 text-sm rounded bg-white/15 text-white hover:bg-white/25"
+        >
+          Log out
+        </button>
       </div>
     </nav>
   );

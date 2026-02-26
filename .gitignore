@@ -1,12 +1,17 @@
 # .NET
 api/bin/
 api/obj/
+api.Tests/bin/
+api.Tests/obj/
 *.user
 *.suo
+api/appsettings.Development.json
+api/.env
 
 # Node
 client/node_modules/
 client/dist/
+client/.env.local
 
 # IDE
 .vs/

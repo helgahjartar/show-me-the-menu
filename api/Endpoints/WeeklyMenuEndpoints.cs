@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using ShowMeTheMenu.Api.Dtos;
+using ShowMeTheMenu.Api.Extensions;
 using ShowMeTheMenu.Api.Services;
 
 namespace ShowMeTheMenu.Api.Endpoints;
@@ -7,42 +9,42 @@ public static class WeeklyMenuEndpoints
 {
     public static void MapWeeklyMenuEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("/api/menus").WithTags("Menus");
+        var group = app.MapGroup("/api/menus").WithTags("Menus").RequireAuthorization();
 
-        group.MapGet("/", async (IWeeklyMenuService service) =>
-            Results.Ok(await service.GetAllAsync()));
+        group.MapGet("/", async (ClaimsPrincipal user, IWeeklyMenuService service) =>
+            Results.Ok(await service.GetAllAsync(user.GetUserId())));
 
-        group.MapGet("/{id:int}", async (int id, IWeeklyMenuService service) =>
-            await service.GetByIdAsync(id) is { } menu
+        group.MapGet("/{id:int}", async (int id, ClaimsPrincipal user, IWeeklyMenuService service) =>
+            await service.GetByIdAsync(id, user.GetUserId()) is { } menu
                 ? Results.Ok(menu)
                 : Results.NotFound());
 
-        group.MapPost("/", async (CreateWeeklyMenuDto dto, IWeeklyMenuService service) =>
+        group.MapPost("/", async (CreateWeeklyMenuDto dto, ClaimsPrincipal user, IWeeklyMenuService service) =>
         {
-            var menu = await service.CreateAsync(dto);
+            var menu = await service.CreateAsync(dto, user.GetUserId());
             return Results.Created($"/api/menus/{menu.Id}", menu);
         });
 
-        group.MapPut("/{id:int}", async (int id, UpdateWeeklyMenuDto dto, IWeeklyMenuService service) =>
-            await service.UpdateAsync(id, dto) is { } menu
+        group.MapPut("/{id:int}", async (int id, UpdateWeeklyMenuDto dto, ClaimsPrincipal user, IWeeklyMenuService service) =>
+            await service.UpdateAsync(id, dto, user.GetUserId()) is { } menu
                 ? Results.Ok(menu)
                 : Results.NotFound());
 
-        group.MapDelete("/{id:int}", async (int id, IWeeklyMenuService service) =>
-            await service.DeleteAsync(id)
+        group.MapDelete("/{id:int}", async (int id, ClaimsPrincipal user, IWeeklyMenuService service) =>
+            await service.DeleteAsync(id, user.GetUserId())
                 ? Results.NoContent()
                 : Results.NotFound());
 
-        group.MapPut("/{id:int}/items", async (int id, SetMenuItemsDto dto, IWeeklyMenuService service) =>
-            await service.SetItemsAsync(id, dto) is { } menu
+        group.MapPut("/{id:int}/items", async (int id, SetMenuItemsDto dto, ClaimsPrincipal user, IWeeklyMenuService service) =>
+            await service.SetItemsAsync(id, dto, user.GetUserId()) is { } menu
                 ? Results.Ok(menu)
                 : Results.NotFound());
 
-        group.MapPost("/generate", async (GenerateMenuDto? dto, IMenuGenerationService generationService) =>
+        group.MapPost("/generate", async (GenerateMenuDto? dto, ClaimsPrincipal user, IMenuGenerationService generationService) =>
         {
             try
             {
-                var result = await generationService.GenerateAsync(dto ?? new GenerateMenuDto(null, null));
+                var result = await generationService.GenerateAsync(dto ?? new GenerateMenuDto(null, null), user.GetUserId());
                 return Results.Created($"/api/menus/{result.Id}", result);
             }
             catch (InvalidOperationException ex)

@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import { initializeAuth } from "../api/client";
 
 export function AuthGuard() {
-  const { isAuthenticated, isLoading, error, loginWithRedirect, getIdTokenClaims } = useAuth0();
+  const { isAuthenticated, isLoading, error, loginWithRedirect, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated && !error) {
@@ -14,12 +14,9 @@ export function AuthGuard() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      initializeAuth(async () => {
-        const claims = await getIdTokenClaims();
-        return claims?.__raw ?? "";
-      });
+      initializeAuth(() => getAccessTokenSilently());
     }
-  }, [isAuthenticated, getIdTokenClaims]);
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   if (isLoading) {
     return (

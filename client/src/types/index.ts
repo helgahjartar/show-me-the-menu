@@ -94,6 +94,12 @@ export interface AiSuggestion {
   suggestedMealType: MealType;
 }
 
+export interface ShoppingListItem {
+  dayOfWeek: number;
+  mealName: string;
+  ingredients: string;
+}
+
 export interface AppSettings {
   hasApiKey: boolean;
   updatedAt: string;

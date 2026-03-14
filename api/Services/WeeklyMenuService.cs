@@ -106,6 +106,22 @@ public class WeeklyMenuService(AppDbContext db) : IWeeklyMenuService
         return ToDto(menu);
     }
 
+    public async Task<List<ShoppingListItemDto>?> GetShoppingListAsync(int id, string userId)
+    {
+        var menu = await db.WeeklyMenus
+            .Include(m => m.Items)
+                .ThenInclude(i => i.Recipe)
+            .FirstOrDefaultAsync(m => m.Id == id && m.UserId == userId);
+
+        if (menu is null) return null;
+
+        return menu.Items
+            .Where(i => i.Recipe is not null)
+            .OrderBy(i => i.DayOfWeek)
+            .Select(i => new ShoppingListItemDto(i.DayOfWeek, i.Recipe!.Name, i.Recipe!.Ingredients))
+            .ToList();
+    }
+
     private static WeeklyMenuDto ToDto(WeeklyMenu m) => new(
         m.Id, m.Name, m.StartDate, m.CreatedAt, m.UpdatedAt,
         m.Items.Select(i => new MenuItemDto(

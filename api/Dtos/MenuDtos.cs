@@ -47,3 +47,8 @@ public record SetMenuItemsDto(
 public record GenerateMenuDto(
     string? Name,
     DateOnly? StartDate);
+
+public record ShoppingListItemDto(
+    int DayOfWeek,
+    string MealName,
+    string Ingredients);

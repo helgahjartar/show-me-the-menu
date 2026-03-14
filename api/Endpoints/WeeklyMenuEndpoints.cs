@@ -40,6 +40,11 @@ public static class WeeklyMenuEndpoints
                 ? Results.Ok(menu)
                 : Results.NotFound());
 
+        group.MapGet("/{id:int}/shopping-list", async (int id, ClaimsPrincipal user, IWeeklyMenuService service) =>
+            await service.GetShoppingListAsync(id, user.GetUserId()) is { } list
+                ? Results.Ok(list)
+                : Results.NotFound());
+
         group.MapPost("/generate", async (GenerateMenuDto? dto, ClaimsPrincipal user, IMenuGenerationService generationService) =>
         {
             try

@@ -10,4 +10,5 @@ public interface IWeeklyMenuService
     Task<WeeklyMenuDto?> UpdateAsync(int id, UpdateWeeklyMenuDto dto, string userId);
     Task<bool> DeleteAsync(int id, string userId);
     Task<WeeklyMenuDto?> SetItemsAsync(int id, SetMenuItemsDto dto, string userId);
+    Task<List<ShoppingListItemDto>?> GetShoppingListAsync(int id, string userId);
 }

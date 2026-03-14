@@ -66,11 +66,18 @@ export default function RecipeDetailPage() {
           </button>
         </div>
       </div>
-      <pre className="whitespace-pre-wrap m-0 font-[inherit] text-text-light">
-        {[recipe.description, recipe.ingredients, recipe.instructions]
-          .filter(Boolean)
-          .join("\n\n")}
-      </pre>
+      {recipe.ingredients && (
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-2">Ingredients</h2>
+          <pre className="whitespace-pre-wrap m-0 font-[inherit] text-text-light">{recipe.ingredients}</pre>
+        </div>
+      )}
+      {recipe.instructions && (
+        <div className="mb-6">
+          <h2 className="text-lg font-semibold mb-2">Recipe</h2>
+          <pre className="whitespace-pre-wrap m-0 font-[inherit] text-text-light">{recipe.instructions}</pre>
+        </div>
+      )}
 
       {showDeleteConfirm && (
         <ConfirmDialog

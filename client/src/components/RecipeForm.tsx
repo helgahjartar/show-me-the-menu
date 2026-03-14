@@ -10,25 +10,20 @@ interface Props {
 
 export default function RecipeForm({ initial, onSubmit, submitLabel }: Props) {
   const [name, setName] = useState(initial?.name ?? "");
-  const [text, setText] = useState(
-    initial
-      ? [initial.description, initial.ingredients, initial.instructions]
-          .filter(Boolean)
-          .join("\n\n")
-      : "",
-  );
+  const [ingredients, setIngredients] = useState(initial?.ingredients ?? "");
+  const [instructions, setInstructions] = useState(initial?.instructions ?? "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
       name: name.trim(),
       description: null,
-      ingredients: text.trim(),
-      instructions: "",
+      ingredients: ingredients.trim(),
+      instructions: instructions.trim(),
     });
   };
 
-  const valid = name.trim() && text.trim();
+  const valid = name.trim() && ingredients.trim();
 
   return (
     <form onSubmit={handleSubmit}>
@@ -46,17 +41,30 @@ export default function RecipeForm({ initial, onSubmit, submitLabel }: Props) {
         />
       </div>
       <div className="mb-4">
-        <label htmlFor="text" className="block mb-1 font-medium">
+        <label htmlFor="ingredients" className="block mb-1 font-medium">
+          Ingredients
+        </label>
+        <textarea
+          id="ingredients"
+          className={textarea}
+          value={ingredients}
+          onChange={(e) => setIngredients(e.target.value)}
+          placeholder="List the ingredients..."
+          rows={6}
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label htmlFor="instructions" className="block mb-1 font-medium">
           Recipe
         </label>
         <textarea
-          id="text"
+          id="instructions"
           className={textarea}
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Ingredients, instructions, notes..."
-          rows={10}
-          required
+          value={instructions}
+          onChange={(e) => setInstructions(e.target.value)}
+          placeholder="How to make it..."
+          rows={8}
         />
       </div>
       <div className="flex gap-3 mt-6">

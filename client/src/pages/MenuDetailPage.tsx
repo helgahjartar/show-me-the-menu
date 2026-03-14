@@ -108,11 +108,20 @@ export default function MenuDetailPage() {
                   {loadingRecipe ? (
                     <p>Loading recipe...</p>
                   ) : selectedRecipe ? (
-                    <pre className="whitespace-pre-wrap m-0 font-[inherit] text-[#5a4a4a]">
-                      {[selectedRecipe.description, selectedRecipe.ingredients, selectedRecipe.instructions]
-                        .filter(Boolean)
-                        .join("\n\n")}
-                    </pre>
+                    <div>
+                      {selectedRecipe.ingredients && (
+                        <div className="mb-4">
+                          <p className="font-semibold mb-1">Ingredients</p>
+                          <pre className="whitespace-pre-wrap m-0 font-[inherit] text-[#5a4a4a]">{selectedRecipe.ingredients}</pre>
+                        </div>
+                      )}
+                      {selectedRecipe.instructions && (
+                        <div>
+                          <p className="font-semibold mb-1">Recipe</p>
+                          <pre className="whitespace-pre-wrap m-0 font-[inherit] text-[#5a4a4a]">{selectedRecipe.instructions}</pre>
+                        </div>
+                      )}
+                    </div>
                   ) : item?.customName ? (
                     <p>{item.customName}</p>
                   ) : (

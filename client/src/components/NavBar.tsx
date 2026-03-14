@@ -14,7 +14,7 @@ export default function NavBar() {
     }`;
 
   return (
-    <nav className="flex items-center gap-8 px-6 py-3 bg-primary border-b border-border">
+    <nav className="flex items-center gap-8 px-6 py-3 bg-primary">
       <Link to="/" className="text-xl font-bold text-nav-brand no-underline hover:text-white">
         Show Me The Menu
       </Link>

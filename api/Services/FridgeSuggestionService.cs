@@ -72,12 +72,22 @@ public class FridgeSuggestionService : IFridgeSuggestionService
 
         var message = new MessageParameters
         {
-            Model = "claude-sonnet-4-5-20250929",
+            Model = "claude-sonnet-4-6",
             MaxTokens = 1024,
             Messages = [new Message(RoleType.User, prompt)]
         };
 
-        var response = await client.Messages.GetClaudeMessageAsync(message);
+        MessageResponse response;
+        try
+        {
+            response = await client.Messages.GetClaudeMessageAsync(message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Anthropic API call failed");
+            throw new InvalidOperationException("Failed to get a response from the AI. Please check your API key and try again.");
+        }
+
         var text = response.Content.OfType<TextContent>().FirstOrDefault()?.Text;
 
         if (string.IsNullOrWhiteSpace(text))

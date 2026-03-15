@@ -98,7 +98,7 @@ public class MenuGenerationService : IMenuGenerationService
 
             var message = new MessageParameters
             {
-                Model = "claude-sonnet-4-5-20250929",
+                Model = "claude-sonnet-4-6",
                 MaxTokens = 256,
                 Messages = [new Message(RoleType.User, prompt)]
             };

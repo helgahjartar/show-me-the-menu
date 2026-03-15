@@ -37,6 +37,9 @@ export default function NavBar() {
           <Link to="/" className={linkClass("/menus")}>
             Menus
           </Link>
+          <Link to="/fridge" className={linkClass("/fridge")}>
+            Make from Fridge
+          </Link>
           <Link to="/recipes" className={linkClass("/recipes")}>
             Recipes
           </Link>

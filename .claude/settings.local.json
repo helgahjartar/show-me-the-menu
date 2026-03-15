@@ -5,7 +5,10 @@
       "Bash(node --version:*)",
       "Bash(npm:*)",
       "Bash(export PATH=\"/opt/homebrew/opt/dotnet@8/bin:$PATH\")",
-      "Bash(export DOTNET_ROOT=\"/opt/homebrew/opt/dotnet@8/libexec\":*)"
+      "Bash(export DOTNET_ROOT=\"/opt/homebrew/opt/dotnet@8/libexec\":*)",
+      "Bash(/opt/homebrew/bin/dotnet test:*)",
+      "Bash(/opt/homebrew/bin/dotnet add:*)",
+      "Bash(curl:*)"
     ]
   }
 }

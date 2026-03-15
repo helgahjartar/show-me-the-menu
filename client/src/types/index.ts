@@ -94,6 +94,21 @@ export interface AiSuggestion {
   suggestedMealType: MealType;
 }
 
+export interface FridgeSuggestionRequest {
+  ingredients: string;
+  excludedRecipeIds: number[];
+}
+
+export interface FridgeSuggestionResponse {
+  matchedRecipeId: number | null;
+  recipeName: string;
+  description: string | null;
+  ingredients: string;
+  instructions: string | null;
+  isExistingRecipe: boolean;
+  explanation: string;
+}
+
 export interface ShoppingListItem {
   dayOfWeek: number;
   mealName: string;

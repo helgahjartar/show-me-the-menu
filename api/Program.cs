@@ -47,6 +47,7 @@ builder.Services.AddSingleton<IAiSuggestionService, AiSuggestionService>();
 
 builder.Services.AddScoped<ISettingsService, SettingsService>();
 builder.Services.AddScoped<IMenuGenerationService, MenuGenerationService>();
+builder.Services.AddScoped<IFridgeSuggestionService, FridgeSuggestionService>();
 
 var allowedOrigins = builder.Configuration["AllowedOrigins"]?.Split(',')
     ?? ["http://localhost:5173"];

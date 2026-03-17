@@ -54,7 +54,6 @@ export default function HomePage() {
     }
   };
 
-  if (loading) return <p>Loading menus...</p>;
 
   return (
     <div>
@@ -149,7 +148,9 @@ export default function HomePage() {
         </div>
       )}
 
-      {menus.length === 0 ? (
+      {loading ? (
+        <p>Loading menus...</p>
+      ) : menus.length === 0 ? (
         <div className="text-center py-12 px-4 text-text-light">
           <p>No menus yet. Generate your first weekly menu!</p>
         </div>

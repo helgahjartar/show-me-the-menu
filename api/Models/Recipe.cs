@@ -8,6 +8,8 @@ public class Recipe
     public string? Description { get; set; }
     public required string Ingredients { get; set; }
     public required string Instructions { get; set; }
+    public List<string> Tags { get; set; } = [];
+    public int? CookingTimeMinutes { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 

@@ -14,6 +14,9 @@ public static class RecipeEndpoints
         group.MapGet("/", async (ClaimsPrincipal user, IRecipeService service) =>
             Results.Ok(await service.GetAllAsync(user.GetUserId())));
 
+        group.MapGet("/tags", async (ClaimsPrincipal user, IRecipeService service) =>
+            Results.Ok(await service.GetAllTagsAsync(user.GetUserId())));
+
         group.MapGet("/{id:int}", async (int id, ClaimsPrincipal user, IRecipeService service) =>
             await service.GetByIdAsync(id, user.GetUserId()) is { } recipe
                 ? Results.Ok(recipe)

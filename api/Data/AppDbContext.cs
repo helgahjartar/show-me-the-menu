@@ -31,6 +31,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(1000);
             entity.Property(e => e.Ingredients).IsRequired();
             entity.Property(e => e.Instructions).IsRequired();
+            entity.Property(e => e.Tags).HasColumnType("text[]");
         });
 
         modelBuilder.Entity<WeeklyMenu>(entity =>

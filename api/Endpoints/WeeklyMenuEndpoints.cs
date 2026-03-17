@@ -49,7 +49,7 @@ public static class WeeklyMenuEndpoints
         {
             try
             {
-                var result = await generationService.GenerateAsync(dto ?? new GenerateMenuDto(null, null), user.GetUserId());
+                var result = await generationService.GenerateAsync(dto ?? new GenerateMenuDto(null, null, null, null), user.GetUserId());
                 return Results.Created($"/api/menus/{result.Id}", result);
             }
             catch (InvalidOperationException ex)

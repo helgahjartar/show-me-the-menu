@@ -32,6 +32,8 @@ public class RecipeService(AppDbContext db) : IRecipeService
             Description = dto.Description,
             Ingredients = dto.Ingredients,
             Instructions = dto.Instructions,
+            Tags = dto.Tags ?? [],
+            CookingTimeMinutes = dto.CookingTimeMinutes,
             CreatedAt = now,
             UpdatedAt = now
         };
@@ -51,6 +53,8 @@ public class RecipeService(AppDbContext db) : IRecipeService
         recipe.Description = dto.Description;
         recipe.Ingredients = dto.Ingredients;
         recipe.Instructions = dto.Instructions;
+        recipe.Tags = dto.Tags ?? recipe.Tags;
+        recipe.CookingTimeMinutes = dto.CookingTimeMinutes;
         recipe.UpdatedAt = DateTime.UtcNow;
 
         await db.SaveChangesAsync();
@@ -69,6 +73,17 @@ public class RecipeService(AppDbContext db) : IRecipeService
         return true;
     }
 
+    public async Task<List<string>> GetAllTagsAsync(string userId)
+    {
+        return await db.Recipes
+            .Where(r => r.UserId == userId)
+            .SelectMany(r => r.Tags)
+            .Distinct()
+            .OrderBy(t => t)
+            .ToListAsync();
+    }
+
     private static RecipeDto ToDto(Recipe r) => new(
-        r.Id, r.Name, r.Description, r.Ingredients, r.Instructions, r.CreatedAt, r.UpdatedAt);
+        r.Id, r.Name, r.Description, r.Ingredients, r.Instructions,
+        r.Tags, r.CookingTimeMinutes, r.CreatedAt, r.UpdatedAt);
 }

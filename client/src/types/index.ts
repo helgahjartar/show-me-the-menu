@@ -30,6 +30,8 @@ export interface Recipe {
   description: string | null;
   ingredients: string;
   instructions: string;
+  tags: string[];
+  cookingTimeMinutes: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -39,6 +41,13 @@ export interface CreateRecipe {
   description: string | null;
   ingredients: string;
   instructions: string;
+  tags: string[];
+  cookingTimeMinutes: number | null;
+}
+
+export interface GenerateMenuRequest {
+  tags?: string[] | null;
+  maxCookingMinutes?: number | null;
 }
 
 export type UpdateRecipe = CreateRecipe

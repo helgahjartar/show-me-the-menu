@@ -44,6 +44,8 @@ export default function RecipeDetailPage() {
             description: recipe.description,
             ingredients: recipe.ingredients,
             instructions: recipe.instructions,
+            tags: recipe.tags,
+            cookingTimeMinutes: recipe.cookingTimeMinutes,
           }}
           onSubmit={handleUpdate}
           submitLabel="Save Changes"
@@ -57,7 +59,7 @@ export default function RecipeDetailPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl leading-tight m-0">{recipe.name}</h1>
         <div className="flex gap-2">
           <button className={btn} onClick={() => setEditing(true)}>Edit</button>
@@ -66,6 +68,19 @@ export default function RecipeDetailPage() {
           </button>
         </div>
       </div>
+      {(recipe.cookingTimeMinutes != null || recipe.tags.length > 0) && (
+        <div className="flex flex-wrap items-center gap-2 mb-6">
+          {recipe.cookingTimeMinutes != null && (
+            <span className="text-text-muted text-sm">{recipe.cookingTimeMinutes} min</span>
+          )}
+          {recipe.tags.map((tag) => (
+            <span key={tag} className="bg-accent/10 text-accent text-sm px-2 py-0.5 rounded-full">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+
       {recipe.ingredients && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Ingredients</h2>

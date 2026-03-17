@@ -20,3 +20,7 @@ export function updateRecipe(id: number, data: UpdateRecipe): Promise<Recipe> {
 export function deleteRecipe(id: number): Promise<void> {
   return apiDelete(`/recipes/${id}`);
 }
+
+export function fetchRecipeTags(): Promise<string[]> {
+  return apiGet<string[]>("/recipes/tags");
+}

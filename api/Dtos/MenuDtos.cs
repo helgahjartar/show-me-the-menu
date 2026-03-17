@@ -46,7 +46,9 @@ public record SetMenuItemsDto(
 
 public record GenerateMenuDto(
     string? Name,
-    DateOnly? StartDate);
+    DateOnly? StartDate,
+    List<string>? Tags,
+    int? MaxCookingMinutes);
 
 public record ShoppingListItemDto(
     int DayOfWeek,

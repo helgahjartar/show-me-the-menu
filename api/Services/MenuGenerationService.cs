@@ -28,8 +28,19 @@ public class MenuGenerationService : IMenuGenerationService
     public async Task<WeeklyMenuDto> GenerateAsync(GenerateMenuDto request, string userId)
     {
         var recipes = await _recipeService.GetAllAsync(userId);
+
+        if (request.Tags is { Count: > 0 })
+            recipes = recipes
+                .Where(r => r.Tags.Any(t => request.Tags.Contains(t, StringComparer.OrdinalIgnoreCase)))
+                .ToList();
+
+        if (request.MaxCookingMinutes.HasValue)
+            recipes = recipes
+                .Where(r => r.CookingTimeMinutes == null || r.CookingTimeMinutes <= request.MaxCookingMinutes)
+                .ToList();
+
         if (recipes.Count == 0)
-            throw new InvalidOperationException("No recipes available to generate a menu.");
+            throw new InvalidOperationException("No recipes match the selected filters.");
 
         var startDate = request.StartDate ?? GetNextMonday();
         var name = request.Name ?? $"Week of {startDate:MMM d}";
@@ -78,7 +89,11 @@ public class MenuGenerationService : IMenuGenerationService
             var client = new AnthropicClient(apiKey);
 
             var recipeList = string.Join("\n", recipes.Select(r =>
-                $"- ID {r.Id}: {r.Name} (ingredients: {r.Ingredients})"));
+            {
+                var tags = r.Tags.Count > 0 ? $", tags: {string.Join(", ", r.Tags)}" : "";
+                var time = r.CookingTimeMinutes.HasValue ? $", cooking time: {r.CookingTimeMinutes}min" : "";
+                return $"- ID {r.Id}: {r.Name} (ingredients: {r.Ingredients}{tags}{time})";
+            }));
 
             var prompt = $$"""
                 You are a meal planning assistant. Given the following recipes, pick exactly 7 that maximize ingredient overlap — meaning they share common ingredients so the total shopping list is minimized and food waste is reduced.

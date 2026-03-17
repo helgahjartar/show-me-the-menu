@@ -4,6 +4,7 @@ import type {
   CreateWeeklyMenu,
   SetMenuItem,
   ShoppingListItem,
+  GenerateMenuRequest,
 } from "../types";
 import { apiGet, apiPost, apiPut, apiDelete } from "./client";
 
@@ -37,8 +38,8 @@ export function setMenuItems(
   return apiPut<WeeklyMenu>(`/menus/${id}/items`, { items });
 }
 
-export function generateMenu(): Promise<WeeklyMenu> {
-  return apiPost<WeeklyMenu>("/menus/generate", {});
+export function generateMenu(request?: GenerateMenuRequest): Promise<WeeklyMenu> {
+  return apiPost<WeeklyMenu>("/menus/generate", request ?? {});
 }
 
 export function fetchShoppingList(id: number): Promise<ShoppingListItem[]> {

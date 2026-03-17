@@ -56,6 +56,6 @@ public static class WeeklyMenuEndpoints
             {
                 return Results.BadRequest(new { error = ex.Message });
             }
-        });
+        }).RequireRateLimiting("ai");
     }
 }

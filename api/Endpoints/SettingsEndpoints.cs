@@ -14,7 +14,13 @@ public static class SettingsEndpoints
         group.MapGet("/", async (ClaimsPrincipal user, ISettingsService service) =>
             Results.Ok(await service.GetAsync(user.GetUserId())));
 
-        group.MapPut("/", async (UpdateSettingsDto dto, ClaimsPrincipal user, ISettingsService service) =>
-            Results.Ok(await service.UpdateAsync(dto, user.GetUserId())));
+        group.MapPut("/", async (UpdateSettingsDto dto, ClaimsPrincipal user, ISettingsService service, ILoggerFactory loggerFactory) =>
+        {
+            var logger = loggerFactory.CreateLogger("SettingsEndpoints");
+            var userId = user.GetUserId();
+            var result = await service.UpdateAsync(dto, userId);
+            logger.LogInformation("API key updated for user {UserId}", userId);
+            return Results.Ok(result);
+        });
     }
 }

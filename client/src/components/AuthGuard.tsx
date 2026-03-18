@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import { initializeAuth } from "../api/client";
 
 export function AuthGuard() {
-  const { isAuthenticated, isLoading, error, loginWithRedirect, getAccessTokenSilently, getIdTokenClaims } = useAuth0();
+  const { isAuthenticated, isLoading, error, loginWithRedirect, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated && !error) {
@@ -15,14 +15,15 @@ export function AuthGuard() {
   useEffect(() => {
     if (isAuthenticated) {
       initializeAuth(async () => {
-        // getAccessTokenSilently uses the refresh token to renew the session
-        // when the current tokens are expired, keeping the cached ID token fresh.
-        await getAccessTokenSilently().catch(() => {});
-        const claims = await getIdTokenClaims();
-        return claims?.__raw ?? "";
+        try {
+          return await getAccessTokenSilently();
+        } catch {
+          await loginWithRedirect();
+          return "";
+        }
       });
     }
-  }, [isAuthenticated, getAccessTokenSilently, getIdTokenClaims]);
+  }, [isAuthenticated, getAccessTokenSilently, loginWithRedirect]);
 
   if (isLoading) {
     return (

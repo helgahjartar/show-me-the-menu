@@ -109,6 +109,18 @@ export default function MenuDetailPage() {
                     <p>Loading recipe...</p>
                   ) : selectedRecipe ? (
                     <div>
+                      {(selectedRecipe.cookingTimeMinutes != null || selectedRecipe.tags.length > 0) && (
+                        <div className="flex flex-wrap items-center gap-2 mb-4">
+                          {selectedRecipe.cookingTimeMinutes != null && (
+                            <span className="text-text-muted text-sm">{selectedRecipe.cookingTimeMinutes} min</span>
+                          )}
+                          {selectedRecipe.tags.map((tag) => (
+                            <span key={tag} className="bg-accent/10 text-accent text-sm px-2 py-0.5 rounded-full">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       {selectedRecipe.ingredients && (
                         <div className="mb-4">
                           <p className="font-semibold mb-1">Ingredients</p>

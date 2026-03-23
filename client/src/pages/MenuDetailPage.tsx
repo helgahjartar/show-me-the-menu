@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { WeeklyMenu, Recipe } from "../types";
 import { DayLabels } from "../types";
-import { fetchMenu, deleteMenu, fetchShoppingList } from "../api/menus";
+import { fetchMenu, deleteMenu, setMenuItems, fetchShoppingList } from "../api/menus";
 import { fetchRecipe } from "../api/recipes";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { btn, btnDanger } from "../utils/styles";
@@ -61,6 +61,23 @@ export default function MenuDetailPage() {
     URL.revokeObjectURL(url);
   };
 
+  const handleDeleteDay = async (dayOfWeek: number) => {
+    if (!menu) return;
+    const remaining = menu.items
+      .filter((i) => i.dayOfWeek !== dayOfWeek)
+      .map((i) => ({
+        dayOfWeek: i.dayOfWeek,
+        mealType: i.mealType,
+        recipeId: i.recipeId,
+        customName: i.customName,
+        notes: i.notes,
+      }));
+    const updated = await setMenuItems(menu.id, remaining);
+    setMenu(updated);
+    setSelectedDay(null);
+    setSelectedRecipe(null);
+  };
+
   const handleDelete = async () => {
     await deleteMenu(Number(id));
     navigate("/");
@@ -105,6 +122,14 @@ export default function MenuDetailPage() {
 
               {isSelected && (
                 <div className="bg-white border border-accent border-t-0 rounded-b-lg px-6 py-4 -mt-3 mb-0">
+                  <div className="flex justify-end mb-3">
+                    <button
+                      className={btnDanger}
+                      onClick={(e) => { e.stopPropagation(); handleDeleteDay(dayIdx); }}
+                    >
+                      Remove day
+                    </button>
+                  </div>
                   {loadingRecipe ? (
                     <p>Loading recipe...</p>
                   ) : selectedRecipe ? (

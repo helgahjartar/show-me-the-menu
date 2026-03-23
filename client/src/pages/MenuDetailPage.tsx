@@ -46,12 +46,18 @@ export default function MenuDetailPage() {
 
   const handleExportShoppingList = async () => {
     const items = await fetchShoppingList(Number(id));
-    const lines: string[] = [`Shopping list for "${menu!.name}"`, ""];
-    for (const item of items) {
-      lines.push(`${DayLabels[item.dayOfWeek]} – ${item.mealName}`);
-      lines.push(item.ingredients);
-      lines.push("");
-    }
+
+    const allIngredients = items
+      .flatMap((item) => item.ingredients.split("\n"))
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+
+    const unique = [...new Set(allIngredients)].sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" })
+    );
+
+    const lines = [`Shopping list for "${menu!.name}"`, "", ...unique];
+
     const blob = new Blob([lines.join("\n")], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

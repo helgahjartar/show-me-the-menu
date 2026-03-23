@@ -117,19 +117,20 @@ export default function MenuDetailPage() {
                 onClick={() => handleDayClick(dayIdx, item?.recipeId ?? null)}
               >
                 <h3 className="min-w-[100px] m-0">{dayName}</h3>
-                <p className="m-0">{item?.customName ?? item?.recipeName ?? "No meal planned"}</p>
+                <p className="m-0 flex-1">{item?.customName ?? item?.recipeName ?? "No meal planned"}</p>
+                {item && (
+                  <button
+                    className="text-text-muted hover:text-red-500 leading-none text-lg ml-auto"
+                    onClick={(e) => { e.stopPropagation(); handleDeleteDay(dayIdx); }}
+                    aria-label="Remove day"
+                  >
+                    ×
+                  </button>
+                )}
               </div>
 
               {isSelected && (
                 <div className="bg-white border border-accent border-t-0 rounded-b-lg px-6 py-4 -mt-3 mb-0">
-                  <div className="flex justify-end mb-3">
-                    <button
-                      className={btnDanger}
-                      onClick={(e) => { e.stopPropagation(); handleDeleteDay(dayIdx); }}
-                    >
-                      Remove day
-                    </button>
-                  </div>
                   {loadingRecipe ? (
                     <p>Loading recipe...</p>
                   ) : selectedRecipe ? (

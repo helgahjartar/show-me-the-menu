@@ -12,18 +12,16 @@ export function AuthGuard() {
     }
   }, [isLoading, isAuthenticated, error, loginWithRedirect]);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      initializeAuth(async () => {
-        try {
-          return await getAccessTokenSilently();
-        } catch {
-          await loginWithRedirect();
-          return "";
-        }
-      });
-    }
-  }, [isAuthenticated, getAccessTokenSilently, loginWithRedirect]);
+  if (isAuthenticated) {
+    initializeAuth(async () => {
+      try {
+        return await getAccessTokenSilently();
+      } catch {
+        await loginWithRedirect();
+        return "";
+      }
+    });
+  }
 
   if (isLoading) {
     return (

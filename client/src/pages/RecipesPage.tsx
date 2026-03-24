@@ -26,8 +26,8 @@ export default function RecipesPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl leading-tight m-0">Recipes</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+        <h1 className="text-2xl sm:text-3xl leading-tight m-0">Recipes</h1>
         {!showForm && (
           <button className={btnPrimary} onClick={() => setShowForm(true)}>
             New Recipe
@@ -50,7 +50,7 @@ export default function RecipesPage() {
           <p>No recipes yet. Create your first one!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
           {recipes.map((r) => (
             <RecipeCard key={r.id} recipe={r} />
           ))}

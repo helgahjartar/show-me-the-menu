@@ -59,8 +59,8 @@ export default function RecipeDetailPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl leading-tight m-0">{recipe.name}</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+        <h1 className="text-2xl sm:text-3xl leading-tight m-0">{recipe.name}</h1>
         <div className="flex gap-2">
           <button className={btn} onClick={() => setEditing(true)}>Edit</button>
           <button className={btnDanger} onClick={() => setShowDeleteConfirm(true)}>
@@ -84,13 +84,13 @@ export default function RecipeDetailPage() {
       {recipe.ingredients && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Ingredients</h2>
-          <pre className="whitespace-pre-wrap m-0 font-[inherit] text-text-light">{recipe.ingredients}</pre>
+          <pre className="whitespace-pre-wrap break-words m-0 font-[inherit] text-text-light">{recipe.ingredients}</pre>
         </div>
       )}
       {recipe.instructions && (
         <div className="mb-6">
           <h2 className="text-lg font-semibold mb-2">Recipe</h2>
-          <pre className="whitespace-pre-wrap m-0 font-[inherit] text-text-light">{recipe.instructions}</pre>
+          <pre className="whitespace-pre-wrap break-words m-0 font-[inherit] text-text-light">{recipe.instructions}</pre>
         </div>
       )}
 

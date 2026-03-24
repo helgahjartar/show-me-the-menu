@@ -97,8 +97,8 @@ export default function MenuDetailPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl leading-tight m-0">{menu.name}</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+        <h1 className="text-2xl sm:text-3xl leading-tight m-0">{menu.name}</h1>
         <div className="flex gap-3">
           <button className={btn} onClick={handleExportShoppingList}>
             Export shopping list
@@ -117,7 +117,7 @@ export default function MenuDetailPage() {
           return (
             <div key={dayIdx}>
               <div
-                className={`bg-white border border-border rounded-lg p-4 cursor-pointer flex items-center gap-6 transition-colors hover:border-accent ${
+                className={`bg-white border border-border rounded-lg p-4 cursor-pointer flex items-center gap-3 sm:gap-6 transition-colors hover:border-accent ${
                   isSelected ? "border-accent rounded-b-none" : ""
                 }`}
                 onClick={() => handleDayClick(dayIdx, item?.recipeId ?? null)}
@@ -136,7 +136,7 @@ export default function MenuDetailPage() {
               </div>
 
               {isSelected && (
-                <div className="bg-white border border-accent border-t-0 rounded-b-lg px-6 py-4 -mt-3 mb-0">
+                <div className="bg-white border border-accent border-t-0 rounded-b-lg px-4 sm:px-6 py-4 -mt-3 mb-0">
                   {loadingRecipe ? (
                     <p>Loading recipe...</p>
                   ) : selectedRecipe ? (
@@ -156,13 +156,13 @@ export default function MenuDetailPage() {
                       {selectedRecipe.ingredients && (
                         <div className="mb-4">
                           <p className="font-semibold mb-1">Ingredients</p>
-                          <pre className="whitespace-pre-wrap m-0 font-[inherit] text-[#5a4a4a]">{selectedRecipe.ingredients}</pre>
+                          <pre className="whitespace-pre-wrap break-words m-0 font-[inherit] text-[#5a4a4a]">{selectedRecipe.ingredients}</pre>
                         </div>
                       )}
                       {selectedRecipe.instructions && (
                         <div>
                           <p className="font-semibold mb-1">Recipe</p>
-                          <pre className="whitespace-pre-wrap m-0 font-[inherit] text-[#5a4a4a]">{selectedRecipe.instructions}</pre>
+                          <pre className="whitespace-pre-wrap break-words m-0 font-[inherit] text-[#5a4a4a]">{selectedRecipe.instructions}</pre>
                         </div>
                       )}
                     </div>

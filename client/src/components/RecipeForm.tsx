@@ -97,7 +97,7 @@ export default function RecipeForm({ initial, onSubmit, submitLabel }: Props) {
           id="cookingTime"
           type="number"
           min="1"
-          className={`${input} w-32`}
+          className={`${input} w-full sm:w-32`}
           value={cookingTime}
           onChange={(e) => setCookingTime(e.target.value)}
           placeholder="e.g. 30"

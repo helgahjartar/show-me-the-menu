@@ -32,8 +32,8 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="max-w-140">
-      <h1 className="text-3xl leading-tight m-0 mb-4">Settings</h1>
+    <div className="max-w-none sm:max-w-140">
+      <h1 className="text-2xl sm:text-3xl leading-tight m-0 mb-4">Settings</h1>
 
       <div className="bg-white border border-border rounded-lg p-4">
         <h2 className="text-2xl m-0 mb-2">Anthropic API Key</h2>
@@ -67,7 +67,7 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="flex gap-3 mt-6 items-center">
+      <div className="flex flex-col sm:flex-row gap-3 mt-6 sm:items-center">
         <button
           className={`${btnPrimary} ${saving || !apiKey.trim() ? "opacity-50 cursor-not-allowed" : ""}`}
           onClick={handleSave}

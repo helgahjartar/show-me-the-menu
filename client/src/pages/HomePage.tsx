@@ -57,8 +57,8 @@ export default function HomePage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl leading-tight m-0">Weekly Menus</h1>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+        <h1 className="text-2xl sm:text-3xl leading-tight m-0">Weekly Menus</h1>
         <button
           className={btnPrimary}
           onClick={() => setShowGenerateModal(true)}
@@ -74,7 +74,7 @@ export default function HomePage() {
           onClick={() => setShowGenerateModal(false)}
         >
           <div
-            className="bg-bg border border-border rounded-xl p-8 w-[90%] max-w-[480px]"
+            className="bg-bg border border-border rounded-xl p-6 sm:p-8 w-[90%] max-w-[480px]"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-xl font-semibold mb-4 m-0">Generate Weekly Menu</h2>
@@ -134,7 +134,7 @@ export default function HomePage() {
           onClick={() => setError(null)}
         >
           <div
-            className="bg-bg border border-border rounded-xl p-8 w-[90%] max-w-[400px] text-center"
+            className="bg-bg border border-border rounded-xl p-6 sm:p-8 w-[90%] max-w-[400px] text-center"
             onClick={(e) => e.stopPropagation()}
           >
             <p className="m-0 mb-6 text-lg">{error}</p>
@@ -155,7 +155,7 @@ export default function HomePage() {
           <p>No menus yet. Generate your first weekly menu!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4">
           {menus.map((m) => (
             <Link key={m.id} to={`/menus/${m.id}`} className="no-underline text-inherit">
               <div className="bg-white border border-border rounded-lg p-4 transition-colors hover:border-accent">

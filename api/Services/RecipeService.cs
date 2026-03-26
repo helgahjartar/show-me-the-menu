@@ -5,7 +5,7 @@ using ShowMeTheMenu.Api.Models;
 
 namespace ShowMeTheMenu.Api.Services;
 
-public class RecipeService(AppDbContext db) : IRecipeService
+public class RecipeService(AppDbContext db)
 {
     public async Task<List<RecipeDto>> GetAllAsync(string userId)
     {

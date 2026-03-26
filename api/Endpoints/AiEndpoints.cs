@@ -11,10 +11,10 @@ public static class AiEndpoints
     {
         var group = app.MapGroup("/api/ai").WithTags("AI").RequireAuthorization().RequireRateLimiting("ai");
 
-        group.MapPost("/suggest", async (AiSuggestRequestDto request, IAiSuggestionService service) =>
+        group.MapPost("/suggest", async (AiSuggestRequestDto request, AiSuggestionService service) =>
             Results.Ok(await service.SuggestAsync(request)));
 
-        group.MapPost("/fridge-suggestion", async (FridgeSuggestionRequestDto request, ClaimsPrincipal user, IFridgeSuggestionService service) =>
+        group.MapPost("/fridge-suggestion", async (FridgeSuggestionRequestDto request, ClaimsPrincipal user, FridgeSuggestionService service) =>
         {
             try
             {

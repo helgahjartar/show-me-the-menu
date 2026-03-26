@@ -6,17 +6,17 @@ using ShowMeTheMenu.Api.Models;
 
 namespace ShowMeTheMenu.Api.Services;
 
-public class MenuGenerationService : IMenuGenerationService
+public class MenuGenerationService
 {
-    private readonly IRecipeService _recipeService;
-    private readonly IWeeklyMenuService _menuService;
-    private readonly ISettingsService _settingsService;
+    private readonly RecipeService _recipeService;
+    private readonly WeeklyMenuService _menuService;
+    private readonly SettingsService _settingsService;
     private readonly ILogger<MenuGenerationService> _logger;
 
     public MenuGenerationService(
-        IRecipeService recipeService,
-        IWeeklyMenuService menuService,
-        ISettingsService settingsService,
+        RecipeService recipeService,
+        WeeklyMenuService menuService,
+        SettingsService settingsService,
         ILogger<MenuGenerationService> logger)
     {
         _recipeService = recipeService;

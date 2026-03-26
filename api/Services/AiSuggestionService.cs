@@ -3,7 +3,7 @@ using ShowMeTheMenu.Api.Models;
 
 namespace ShowMeTheMenu.Api.Services;
 
-public class AiSuggestionService : IAiSuggestionService
+public class AiSuggestionService
 {
     private static readonly List<AiSuggestionDto> Suggestions =
     [

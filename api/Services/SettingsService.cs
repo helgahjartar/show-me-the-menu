@@ -5,7 +5,7 @@ using ShowMeTheMenu.Api.Models;
 
 namespace ShowMeTheMenu.Api.Services;
 
-public class SettingsService : ISettingsService
+public class SettingsService
 {
     private readonly AppDbContext _db;
 

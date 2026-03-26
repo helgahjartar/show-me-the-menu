@@ -5,7 +5,7 @@ using ShowMeTheMenu.Api.Models;
 
 namespace ShowMeTheMenu.Api.Services;
 
-public class WeeklyMenuService(AppDbContext db) : IWeeklyMenuService
+public class WeeklyMenuService(AppDbContext db)
 {
     public async Task<List<WeeklyMenuSummaryDto>> GetAllAsync(string userId)
     {

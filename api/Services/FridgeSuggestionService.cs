@@ -5,15 +5,15 @@ using ShowMeTheMenu.Api.Dtos;
 
 namespace ShowMeTheMenu.Api.Services;
 
-public class FridgeSuggestionService : IFridgeSuggestionService
+public class FridgeSuggestionService
 {
-    private readonly IRecipeService _recipeService;
-    private readonly ISettingsService _settingsService;
+    private readonly RecipeService _recipeService;
+    private readonly SettingsService _settingsService;
     private readonly ILogger<FridgeSuggestionService> _logger;
 
     public FridgeSuggestionService(
-        IRecipeService recipeService,
-        ISettingsService settingsService,
+        RecipeService recipeService,
+        SettingsService settingsService,
         ILogger<FridgeSuggestionService> logger)
     {
         _recipeService = recipeService;

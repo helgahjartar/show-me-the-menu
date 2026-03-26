@@ -44,13 +44,13 @@ if (databaseUrl != null)
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IRecipeService, RecipeService>();
-builder.Services.AddScoped<IWeeklyMenuService, WeeklyMenuService>();
-builder.Services.AddSingleton<IAiSuggestionService, AiSuggestionService>();
+builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<WeeklyMenuService>();
+builder.Services.AddSingleton<AiSuggestionService>();
 
-builder.Services.AddScoped<ISettingsService, SettingsService>();
-builder.Services.AddScoped<IMenuGenerationService, MenuGenerationService>();
-builder.Services.AddScoped<IFridgeSuggestionService, FridgeSuggestionService>();
+builder.Services.AddScoped<SettingsService>();
+builder.Services.AddScoped<MenuGenerationService>();
+builder.Services.AddScoped<FridgeSuggestionService>();
 
 var allowedOrigins = builder.Configuration["AllowedOrigins"]?.Split(',')
     ?? ["http://localhost:5173"];

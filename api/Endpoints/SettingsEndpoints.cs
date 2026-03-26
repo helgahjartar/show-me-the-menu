@@ -11,10 +11,10 @@ public static class SettingsEndpoints
     {
         var group = app.MapGroup("/api/settings").WithTags("Settings").RequireAuthorization();
 
-        group.MapGet("/", async (ClaimsPrincipal user, ISettingsService service) =>
+        group.MapGet("/", async (ClaimsPrincipal user, SettingsService service) =>
             Results.Ok(await service.GetAsync(user.GetUserId())));
 
-        group.MapPut("/", async (UpdateSettingsDto dto, ClaimsPrincipal user, ISettingsService service, ILoggerFactory loggerFactory) =>
+        group.MapPut("/", async (UpdateSettingsDto dto, ClaimsPrincipal user, SettingsService service, ILoggerFactory loggerFactory) =>
         {
             var logger = loggerFactory.CreateLogger("SettingsEndpoints");
             var userId = user.GetUserId();

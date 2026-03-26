@@ -11,29 +11,29 @@ public static class RecipeEndpoints
     {
         var group = app.MapGroup("/api/recipes").WithTags("Recipes").RequireAuthorization();
 
-        group.MapGet("/", async (ClaimsPrincipal user, IRecipeService service) =>
+        group.MapGet("/", async (ClaimsPrincipal user, RecipeService service) =>
             Results.Ok(await service.GetAllAsync(user.GetUserId())));
 
-        group.MapGet("/tags", async (ClaimsPrincipal user, IRecipeService service) =>
+        group.MapGet("/tags", async (ClaimsPrincipal user, RecipeService service) =>
             Results.Ok(await service.GetAllTagsAsync(user.GetUserId())));
 
-        group.MapGet("/{id:int}", async (int id, ClaimsPrincipal user, IRecipeService service) =>
+        group.MapGet("/{id:int}", async (int id, ClaimsPrincipal user, RecipeService service) =>
             await service.GetByIdAsync(id, user.GetUserId()) is { } recipe
                 ? Results.Ok(recipe)
                 : Results.NotFound());
 
-        group.MapPost("/", async (CreateRecipeDto dto, ClaimsPrincipal user, IRecipeService service) =>
+        group.MapPost("/", async (CreateRecipeDto dto, ClaimsPrincipal user, RecipeService service) =>
         {
             var recipe = await service.CreateAsync(dto, user.GetUserId());
             return Results.Created($"/api/recipes/{recipe.Id}", recipe);
         });
 
-        group.MapPut("/{id:int}", async (int id, UpdateRecipeDto dto, ClaimsPrincipal user, IRecipeService service) =>
+        group.MapPut("/{id:int}", async (int id, UpdateRecipeDto dto, ClaimsPrincipal user, RecipeService service) =>
             await service.UpdateAsync(id, dto, user.GetUserId()) is { } recipe
                 ? Results.Ok(recipe)
                 : Results.NotFound());
 
-        group.MapDelete("/{id:int}", async (int id, ClaimsPrincipal user, IRecipeService service) =>
+        group.MapDelete("/{id:int}", async (int id, ClaimsPrincipal user, RecipeService service) =>
             await service.DeleteAsync(id, user.GetUserId())
                 ? Results.NoContent()
                 : Results.NotFound());

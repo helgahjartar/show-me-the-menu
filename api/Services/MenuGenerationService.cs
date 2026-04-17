@@ -42,31 +42,36 @@ public class MenuGenerationService
         if (recipes.Count == 0)
             throw new InvalidOperationException("No recipes match the selected filters.");
 
+        var daysOfWeek = request.DaysOfWeek is { Count: > 0 }
+            ? request.DaysOfWeek.Distinct().OrderBy(d => d).ToList()
+            : Enumerable.Range(0, 7).ToList();
+        var dayCount = daysOfWeek.Count;
+
         var startDate = request.StartDate ?? GetNextMonday();
         var name = request.Name ?? $"Week of {startDate:MMM d}";
 
         var menu = await _menuService.CreateAsync(new CreateWeeklyMenuDto(name, startDate), userId);
 
-        var selectedIds = await PickRecipeIdsWithAi(recipes, userId);
+        var selectedIds = await PickRecipeIdsWithAi(recipes, dayCount, request.Ingredients, userId);
 
         // Fallback to random if AI fails or returns invalid IDs
-        if (selectedIds == null || selectedIds.Count != 7)
+        if (selectedIds == null || selectedIds.Count != dayCount)
         {
             _logger.LogWarning("AI selection failed or returned wrong count, falling back to random");
-            selectedIds = PickRandomRecipeIds(recipes);
+            selectedIds = PickRandomRecipeIds(recipes, dayCount);
         }
 
         var validIds = new HashSet<int>(recipes.Select(r => r.Id));
         if (selectedIds.Any(id => !validIds.Contains(id)))
         {
             _logger.LogWarning("AI returned invalid recipe IDs, falling back to random");
-            selectedIds = PickRandomRecipeIds(recipes);
+            selectedIds = PickRandomRecipeIds(recipes, dayCount);
         }
 
-        var items = selectedIds.Select((recipeId, i) => new SetMenuItemDto(
-            DayOfWeek: i,
+        var items = daysOfWeek.Select((dayOfWeek, i) => new SetMenuItemDto(
+            DayOfWeek: dayOfWeek,
             MealType: MealType.Dinner,
-            RecipeId: recipeId,
+            RecipeId: selectedIds[i],
             CustomName: null,
             Notes: null
         )).ToList();
@@ -75,7 +80,7 @@ public class MenuGenerationService
         return result!;
     }
 
-    private async Task<List<int>?> PickRecipeIdsWithAi(List<RecipeDto> recipes, string userId)
+    private async Task<List<int>?> PickRecipeIdsWithAi(List<RecipeDto> recipes, int dayCount, string? ingredients, string userId)
     {
         try
         {
@@ -95,19 +100,23 @@ public class MenuGenerationService
                 return $"- ID {r.Id}: {r.Name} (ingredients: {r.Ingredients}{tags}{time})";
             }));
 
+            var ingredientsHint = !string.IsNullOrWhiteSpace(ingredients)
+                ? $"\n\nThe user currently has these ingredients at home: {ingredients}\nPrioritize recipes that use these ingredients."
+                : "";
+
             var prompt = $$"""
-                You are a meal planning assistant. Given the following recipes, pick exactly 7 that maximize ingredient overlap — meaning they share common ingredients so the total shopping list is minimized and food waste is reduced.
+                You are a meal planning assistant. Given the following recipes, pick exactly {{dayCount}} that maximize ingredient overlap — meaning they share common ingredients so the total shopping list is minimized and food waste is reduced.
 
                 Recipes:
-                {{recipeList}}
+                {{recipeList}}{{ingredientsHint}}
 
                 Respond with ONLY a JSON object in this exact format, no other text:
-                {"recipeIds": [1, 2, 3, 4, 5, 6, 7]}
+                {"recipeIds": [1, 2, 3]}
 
                 Rules:
-                - Pick exactly 7 recipe IDs from the list above
+                - Pick exactly {{dayCount}} recipe IDs from the list above
                 - Prioritize recipes that share ingredients (e.g., multiple recipes using chicken, onions, garlic)
-                - If there are fewer than 7 recipes, you may repeat IDs to fill 7 slots
+                - If there are fewer than {{dayCount}} recipes, you may repeat IDs to fill {{dayCount}} slots
                 - Return ONLY the JSON object, no explanation
                 """;
 
@@ -148,10 +157,10 @@ public class MenuGenerationService
         }
     }
 
-    private static List<int> PickRandomRecipeIds(List<RecipeDto> recipes)
+    private static List<int> PickRandomRecipeIds(List<RecipeDto> recipes, int count)
     {
         var rng = Random.Shared;
-        return Enumerable.Range(0, 7)
+        return Enumerable.Range(0, count)
             .Select(_ => recipes[rng.Next(recipes.Count)].Id)
             .ToList();
     }

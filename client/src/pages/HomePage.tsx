@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import type { WeeklyMenuSummary } from "../types";
 import { fetchMenus, generateMenu } from "../api/menus";
 import { fetchRecipeTags } from "../api/recipes";
-import { btn, btnPrimary, input } from "../utils/styles";
+import { btn, btnPrimary, input, textarea } from "../utils/styles";
 
 export default function HomePage() {
   const [menus, setMenus] = useState<WeeklyMenuSummary[]>([]);
@@ -14,6 +14,8 @@ export default function HomePage() {
   const [allTags, setAllTags] = useState<string[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [maxCookingMinutes, setMaxCookingMinutes] = useState("");
+  const [selectedDays, setSelectedDays] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]);
+  const [ingredients, setIngredients] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,6 +33,12 @@ export default function HomePage() {
     );
   };
 
+  const toggleDay = (day: number) => {
+    setSelectedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day].sort()
+    );
+  };
+
   const handleCreate = async () => {
     setShowGenerateModal(false);
     setGenerating(true);
@@ -39,6 +47,8 @@ export default function HomePage() {
       const menu = await generateMenu({
         tags: selectedTags.length > 0 ? selectedTags : null,
         maxCookingMinutes: maxCookingMinutes ? parseInt(maxCookingMinutes, 10) : null,
+        daysOfWeek: selectedDays.length < 7 ? selectedDays : null,
+        ingredients: ingredients.trim() || null,
       });
       navigate(`/menus/${menu.id}`);
     } catch (err: unknown) {
@@ -79,6 +89,26 @@ export default function HomePage() {
           >
             <h2 className="text-xl font-semibold mb-4 m-0">Generate Weekly Menu</h2>
 
+            <div className="mb-5">
+              <p className="font-medium mb-2 m-0">Days to include</p>
+              <div className="flex flex-wrap gap-2">
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((label, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => toggleDay(i)}
+                    className={`px-3 py-1 rounded-full text-sm border transition-colors ${
+                      selectedDays.includes(i)
+                        ? "bg-accent text-white border-accent"
+                        : "border-border hover:border-accent"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {allTags.length > 0 && (
               <div className="mb-5">
                 <p className="font-medium mb-2 m-0">Filter by tags</p>
@@ -101,7 +131,7 @@ export default function HomePage() {
               </div>
             )}
 
-            <div className="mb-6">
+            <div className="mb-5">
               <label htmlFor="maxCooking" className="block font-medium mb-1">
                 Max cooking time (minutes, optional)
               </label>
@@ -116,11 +146,28 @@ export default function HomePage() {
               />
             </div>
 
+            <div className="mb-6">
+              <label htmlFor="ingredients" className="block font-medium mb-1">
+                Ingredients you have at home (optional)
+              </label>
+              <textarea
+                id="ingredients"
+                className={textarea}
+                rows={3}
+                placeholder={"e.g. chicken breast, onions, garlic, pasta"}
+                value={ingredients}
+                onChange={(e) => setIngredients(e.target.value)}
+              />
+              <p className="text-xs text-text-muted mt-1">
+                The AI will prioritize recipes that use these ingredients.
+              </p>
+            </div>
+
             <div className="flex justify-end gap-3">
               <button className={btn} onClick={() => setShowGenerateModal(false)}>
                 Cancel
               </button>
-              <button className={btnPrimary} onClick={handleCreate}>
+              <button className={btnPrimary} onClick={handleCreate} disabled={selectedDays.length === 0}>
                 Generate
               </button>
             </div>

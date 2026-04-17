@@ -45,6 +45,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<RecipeService>();
+builder.Services.AddScoped<InventoryService>();
 builder.Services.AddScoped<WeeklyMenuService>();
 builder.Services.AddSingleton<AiSuggestionService>();
 
@@ -117,5 +118,6 @@ app.MapRecipeEndpoints();
 app.MapWeeklyMenuEndpoints();
 app.MapAiEndpoints();
 app.MapSettingsEndpoints();
+app.MapInventoryEndpoints();
 
 app.Run();

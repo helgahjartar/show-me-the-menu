@@ -28,8 +28,8 @@ export default function NavBar() {
         </Link>
         <div className="hidden sm:flex gap-4">
           <Link to="/" className={linkClass("/menus")}>Menus</Link>
-          <Link to="/fridge" className={linkClass("/fridge")}>Make from Fridge</Link>
           <Link to="/recipes" className={linkClass("/recipes")}>Recipes</Link>
+          <Link to="/inventory" className={linkClass("/inventory")}>Inventory</Link>
           <Link to="/settings" className={linkClass("/settings")}>Settings</Link>
         </div>
         <div className="hidden sm:flex ml-auto items-center gap-3">
@@ -46,8 +46,8 @@ export default function NavBar() {
       {/* Mobile bottom nav */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-primary z-50 flex items-center justify-around px-2 py-2 border-t border-white/10">
         <Link to="/" className={mobileLinkClass("/menus")}>Menus</Link>
-        <Link to="/fridge" className={mobileLinkClass("/fridge")}>Fridge</Link>
         <Link to="/recipes" className={mobileLinkClass("/recipes")}>Recipes</Link>
+        <Link to="/inventory" className={mobileLinkClass("/inventory")}>Inventory</Link>
         <Link to="/settings" className={mobileLinkClass("/settings")}>Settings</Link>
         <button
           onClick={doLogout}

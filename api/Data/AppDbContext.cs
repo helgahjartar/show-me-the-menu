@@ -11,6 +11,7 @@ public class AppDbContext : DbContext
     public DbSet<WeeklyMenu> WeeklyMenus => Set<WeeklyMenu>();
     public DbSet<MenuItem> MenuItems => Set<MenuItem>();
     public DbSet<AppSettings> AppSettings => Set<AppSettings>();
+    public DbSet<InventoryItem> InventoryItems => Set<InventoryItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -44,6 +45,15 @@ public class AppDbContext : DbContext
                   .WithOne(e => e.WeeklyMenu)
                   .HasForeignKey(e => e.WeeklyMenuId)
                   .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<InventoryItem>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.UserId).HasMaxLength(128).IsRequired();
+            entity.HasIndex(e => e.UserId);
+            entity.Property(e => e.Category).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Name).HasMaxLength(200).IsRequired();
         });
 
         modelBuilder.Entity<MenuItem>(entity =>

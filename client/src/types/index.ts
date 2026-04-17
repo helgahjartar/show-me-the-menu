@@ -48,6 +48,8 @@ export interface CreateRecipe {
 export interface GenerateMenuRequest {
   tags?: string[] | null;
   maxCookingMinutes?: number | null;
+  daysOfWeek?: number[] | null;
+  ingredients?: string | null;
 }
 
 export type UpdateRecipe = CreateRecipe
@@ -122,6 +124,15 @@ export interface ShoppingListItem {
   dayOfWeek: number;
   mealName: string;
   ingredients: string;
+}
+
+export interface InventoryItem {
+  id: number;
+  category: string;
+  name: string;
+  quantity: number;
+  isCrossed: boolean;
+  createdAt: string;
 }
 
 export interface AppSettings {

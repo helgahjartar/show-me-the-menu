@@ -94,26 +94,24 @@ function CategoryList({
         <ul className="space-y-2 mb-3">
           {active.map((item) => (
             <li key={item.id} className="flex items-center gap-2 group">
-              <div className="relative w-5 h-5 shrink-0">
-                <button
-                  onClick={() => onToggle(item)}
-                  className="w-5 h-5 rounded border border-border flex items-center justify-center hover:border-accent transition-colors bg-white absolute inset-0 group-hover:opacity-0"
-                  aria-label="Mark as used"
-                />
-                <button
-                  onClick={() => onRemove(item.id)}
-                  className="w-5 h-5 flex items-center justify-center text-text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity text-base leading-none absolute inset-0"
-                  aria-label="Remove"
-                >
-                  ×
-                </button>
-              </div>
+              <button
+                onClick={() => onToggle(item)}
+                className="w-5 h-5 rounded border border-border flex items-center justify-center shrink-0 hover:border-accent transition-colors bg-white"
+                aria-label="Mark as used"
+              />
               <span className="flex-1 text-sm">{item.name}</span>
               <div className="flex items-center gap-1 w-[72px] justify-center shrink-0">
                 <QuantityButton onClick={() => onChangeQuantity(item, -1)}>−</QuantityButton>
                 <span className="w-6 text-center text-sm tabular-nums font-medium">{item.quantity}</span>
                 <QuantityButton onClick={() => onChangeQuantity(item, +1)}>+</QuantityButton>
               </div>
+              <button
+                onClick={() => onRemove(item.id)}
+                className="text-text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity text-lg leading-none w-4 text-center shrink-0"
+                aria-label="Remove"
+              >
+                ×
+              </button>
             </li>
           ))}
         </ul>
@@ -127,24 +125,22 @@ function CategoryList({
           <ul className="space-y-2">
             {crossed.map((item) => (
               <li key={item.id} className="flex items-center gap-2 group">
-                <div className="relative w-5 h-5 shrink-0">
-                  <button
-                    onClick={() => onToggle(item)}
-                    className="w-5 h-5 rounded border border-accent flex items-center justify-center bg-accent text-bg transition-colors hover:bg-accent-dark text-xs font-bold absolute inset-0 group-hover:opacity-0"
-                    aria-label="Mark as available"
-                  >
-                    ✓
-                  </button>
-                  <button
-                    onClick={() => onRemove(item.id)}
-                    className="w-5 h-5 flex items-center justify-center text-text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity text-base leading-none absolute inset-0"
-                    aria-label="Remove"
-                  >
-                    ×
-                  </button>
-                </div>
+                <button
+                  onClick={() => onToggle(item)}
+                  className="w-5 h-5 rounded border border-accent flex items-center justify-center shrink-0 bg-accent text-bg transition-colors hover:bg-accent-dark text-xs font-bold"
+                  aria-label="Mark as available"
+                >
+                  ✓
+                </button>
                 <span className="flex-1 text-sm line-through text-text-muted">{item.name}</span>
                 <span className="w-[72px] text-center text-sm text-text-muted tabular-nums">{item.quantity}</span>
+                <button
+                  onClick={() => onRemove(item.id)}
+                  className="text-text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity text-lg leading-none w-4 text-center shrink-0"
+                  aria-label="Remove"
+                >
+                  ×
+                </button>
               </li>
             ))}
           </ul>

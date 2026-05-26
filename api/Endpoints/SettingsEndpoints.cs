@@ -19,7 +19,7 @@ public static class SettingsEndpoints
             var logger = loggerFactory.CreateLogger("SettingsEndpoints");
             var userId = user.GetUserId();
             var result = await service.UpdateAsync(dto, userId);
-            logger.LogInformation("API key updated for user {UserId}", userId);
+            logger.LogInformation("Anthropic API key updated for user {UserId}", userId);
             return Results.Ok(result);
         });
     }

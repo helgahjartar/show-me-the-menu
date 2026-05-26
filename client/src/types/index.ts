@@ -137,9 +137,11 @@ export interface InventoryItem {
 
 export interface AppSettings {
   hasApiKey: boolean;
+  hasKronanApiKey: boolean;
   updatedAt: string;
 }
 
 export interface UpdateSettings {
-  anthropicApiKey: string;
+  anthropicApiKey?: string;
+  kronanApiKey?: string;
 }

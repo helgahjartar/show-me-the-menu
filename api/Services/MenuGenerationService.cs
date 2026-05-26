@@ -84,14 +84,14 @@ public class MenuGenerationService
     {
         try
         {
-            var apiKey = await _settingsService.GetApiKeyAsync(userId);
-            if (string.IsNullOrWhiteSpace(apiKey))
+            var anthropicApiKey = await _settingsService.GetApiKeyAsync(userId);
+            if (string.IsNullOrWhiteSpace(anthropicApiKey))
             {
-                _logger.LogInformation("No API key configured, skipping AI selection");
+                _logger.LogInformation("No Anthropic API key configured, skipping AI selection");
                 return null;
             }
 
-            var client = new AnthropicClient(apiKey);
+            var client = new AnthropicClient(anthropicApiKey);
 
             var recipeList = string.Join("\n", recipes.Select(r =>
             {

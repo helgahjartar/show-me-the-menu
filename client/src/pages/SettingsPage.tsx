@@ -5,7 +5,8 @@ import { btnPrimary, input } from "../utils/styles";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<AppSettings | null>(null);
-  const [apiKey, setApiKey] = useState("");
+  const [anthropicApiKey, setAnthropicApiKey] = useState("");
+  const [kronanApiKey, setKronanApiKey] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -16,16 +17,20 @@ export default function SettingsPage() {
   }, []);
 
   const handleSave = async () => {
-    if (!apiKey.trim()) return;
+    if (!anthropicApiKey.trim() && !kronanApiKey.trim()) return;
     setSaving(true);
     setMessage(null);
     try {
-      const updated = await updateSettings({ anthropicApiKey: apiKey.trim() });
+      const updated = await updateSettings({
+        ...(anthropicApiKey.trim() && { anthropicApiKey: anthropicApiKey.trim() }),
+        ...(kronanApiKey.trim() && { kronanApiKey: kronanApiKey.trim() }),
+      });
       setSettings(updated);
-      setApiKey("");
-      setMessage({ type: "success", text: "API key saved successfully." });
+      setAnthropicApiKey("");
+      setKronanApiKey("");
+      setMessage({ type: "success", text: "Anthropic API key saved successfully." });
     } catch {
-      setMessage({ type: "error", text: "Failed to save API key." });
+      setMessage({ type: "error", text: "Failed to save Anthropic API key." });
     } finally {
       setSaving(false);
     }
@@ -35,7 +40,7 @@ export default function SettingsPage() {
     <div className="max-w-none sm:max-w-140">
       <h1 className="text-2xl sm:text-3xl leading-tight m-0 mb-4">Settings</h1>
 
-      <div className="bg-white border border-border rounded-lg p-4">
+      <div className="bg-white border border-border rounded-lg p-4 mb-4">
         <h2 className="text-2xl m-0 mb-2">Anthropic API Key</h2>
 
         {settings && (
@@ -60,18 +65,49 @@ export default function SettingsPage() {
           <input
             type="password"
             className={input}
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
+            value={anthropicApiKey}
+            onChange={(e) => setAnthropicApiKey(e.target.value)}
             placeholder="sk-ant-..."
+          />
+        </div>
+      </div>
+
+      <div className="bg-white border border-border rounded-lg p-4">
+        <h2 className="text-2xl m-0 mb-2">Krónan API Key</h2>
+
+        {settings && (
+          <div className="flex items-center gap-2 mb-4">
+            <span
+              className={`inline-block w-3 h-3 rounded-full ${
+                settings.hasKronanApiKey ? "bg-green-500" : "bg-red-500"
+              }`}
+            />
+            <span className="text-sm text-text-muted">
+              {settings.hasKronanApiKey ? "API key is configured" : "No API key configured"}
+            </span>
+          </div>
+        )}
+
+        <p className="text-sm text-text-muted mb-4">
+          Enter your Krónan API key to enable Krónan integration.
+        </p>
+
+        <div className="mb-4">
+          <input
+            type="password"
+            className={input}
+            value={kronanApiKey}
+            onChange={(e) => setKronanApiKey(e.target.value)}
+            placeholder="..."
           />
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 mt-6 sm:items-center">
         <button
-          className={`${btnPrimary} ${saving || !apiKey.trim() ? "opacity-50 cursor-not-allowed" : ""}`}
+          className={`${btnPrimary} ${saving || (!anthropicApiKey.trim() && !kronanApiKey.trim()) ? "opacity-50 cursor-not-allowed" : ""}`}
           onClick={handleSave}
-          disabled={saving || !apiKey.trim()}
+          disabled={saving || (!anthropicApiKey.trim() && !kronanApiKey.trim())}
         >
           {saving ? "Saving..." : "Save"}
         </button>

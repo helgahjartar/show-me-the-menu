@@ -23,9 +23,9 @@ public class FridgeSuggestionService
 
     public async Task<FridgeSuggestionResponseDto> SuggestAsync(FridgeSuggestionRequestDto request, string userId)
     {
-        var apiKey = await _settingsService.GetApiKeyAsync(userId);
-        if (string.IsNullOrWhiteSpace(apiKey))
-            throw new InvalidOperationException("No Anthropic API key configured. Please add your API key in Settings.");
+        var anthropicApiKey = await _settingsService.GetApiKeyAsync(userId);
+        if (string.IsNullOrWhiteSpace(anthropicApiKey))
+            throw new InvalidOperationException("No Anthropic API key configured. Please add your Anthropic API key in Settings.");
 
         var recipes = await _recipeService.GetAllAsync(userId);
 
@@ -68,7 +68,7 @@ public class FridgeSuggestionService
             - Return ONLY the JSON object, no markdown, no explanation outside the JSON.
             """;
 
-        var client = new AnthropicClient(apiKey);
+        var client = new AnthropicClient(anthropicApiKey);
 
         var message = new MessageParameters
         {

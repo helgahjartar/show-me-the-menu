@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import type { WeeklyMenu, Recipe } from "../types";
 import { DayLabels } from "../types";
-import { fetchMenu, deleteMenu, setMenuItems, fetchShoppingList } from "../api/menus";
+import { fetchMenu, deleteMenu, setMenuItems, fetchShoppingList, sendShoppingListToKronan } from "../api/menus";
 import { fetchRecipe } from "../api/recipes";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { btn, btnDanger } from "../utils/styles";
@@ -16,6 +16,8 @@ export default function MenuDetailPage() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [loadingRecipe, setLoadingRecipe] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [sendingToKronan, setSendingToKronan] = useState(false);
+  const [kronanMessage, setKronanMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
     fetchMenu(Number(id))
@@ -41,6 +43,20 @@ export default function MenuDetailPage() {
       } finally {
         setLoadingRecipe(false);
       }
+    }
+  };
+
+  const handleSendToKronan = async () => {
+    setSendingToKronan(true);
+    setKronanMessage(null);
+    try {
+      await sendShoppingListToKronan(Number(id));
+      setKronanMessage({ type: "success", text: "Added to Krónan shopping list." });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to send to Krónan.";
+      setKronanMessage({ type: "error", text: msg });
+    } finally {
+      setSendingToKronan(false);
     }
   };
 
@@ -99,10 +115,22 @@ export default function MenuDetailPage() {
     <div>
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
         <h1 className="text-2xl sm:text-3xl leading-tight m-0">{menu.name}</h1>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3 items-center">
           <button className={btn} onClick={handleExportShoppingList}>
             Export shopping list
           </button>
+          <button
+            className={`${btn} ${sendingToKronan ? "opacity-50 cursor-not-allowed" : ""}`}
+            onClick={handleSendToKronan}
+            disabled={sendingToKronan}
+          >
+            {sendingToKronan ? "Sending..." : "Send to Krónan"}
+          </button>
+          {kronanMessage && (
+            <span className={`text-sm ${kronanMessage.type === "success" ? "text-green-500" : "text-red-500"}`}>
+              {kronanMessage.text}
+            </span>
+          )}
           <button className={btnDanger} onClick={() => setShowDeleteConfirm(true)}>
             Delete
           </button>

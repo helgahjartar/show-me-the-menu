@@ -52,6 +52,7 @@ builder.Services.AddSingleton<AiSuggestionService>();
 builder.Services.AddScoped<SettingsService>();
 builder.Services.AddScoped<MenuGenerationService>();
 builder.Services.AddScoped<FridgeSuggestionService>();
+builder.Services.AddHttpClient<KronanService>();
 
 var allowedOrigins = builder.Configuration["AllowedOrigins"]?.Split(',')
     ?? ["http://localhost:5173"];

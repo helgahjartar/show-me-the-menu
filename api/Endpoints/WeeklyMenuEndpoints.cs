@@ -45,6 +45,25 @@ public static class WeeklyMenuEndpoints
                 ? Results.Ok(list)
                 : Results.NotFound());
 
+        group.MapPost("/{id:int}/send-to-kronan", async (int id, ClaimsPrincipal user, WeeklyMenuService menuService, KronanService kronanService) =>
+        {
+            var list = await menuService.GetShoppingListAsync(id, user.GetUserId());
+            if (list is null) return Results.NotFound();
+
+            var ingredients = list
+                .SelectMany(i => i.Ingredients.Split('\n'));
+
+            try
+            {
+                await kronanService.AddToShoppingListAsync(ingredients, user.GetUserId());
+                return Results.NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Results.BadRequest(new { error = ex.Message });
+            }
+        });
+
         group.MapPost("/generate", async (GenerateMenuDto? dto, ClaimsPrincipal user, MenuGenerationService generationService) =>
         {
             try

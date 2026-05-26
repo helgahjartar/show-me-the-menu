@@ -61,4 +61,10 @@ public class SettingsService
         var settings = await _db.AppSettings.FirstOrDefaultAsync(s => s.UserId == userId);
         return settings?.AnthropicApiKey;
     }
+
+    public async Task<string?> GetKronanApiKeyAsync(string userId)
+    {
+        var settings = await _db.AppSettings.FirstOrDefaultAsync(s => s.UserId == userId);
+        return settings?.KronanApiKey;
+    }
 }

@@ -45,3 +45,7 @@ export function generateMenu(request?: GenerateMenuRequest): Promise<WeeklyMenu>
 export function fetchShoppingList(id: number): Promise<ShoppingListItem[]> {
   return apiGet<ShoppingListItem[]>(`/menus/${id}/shopping-list`);
 }
+
+export function sendShoppingListToKronan(id: number): Promise<void> {
+  return apiPost<void>(`/menus/${id}/send-to-kronan`, {});
+}

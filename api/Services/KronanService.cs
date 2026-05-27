@@ -47,30 +47,40 @@ public class KronanService(HttpClient httpClient, SettingsService settingsServic
         if (string.IsNullOrWhiteSpace(apiKey))
             throw new InvalidOperationException("No Krónan API key configured. Please add your Krónan API key in Settings.");
 
-        var results = new List<KronanProductStatsDto>();
-        string? url = $"{BaseUrl}/product-purchase-stats/?limit=50";
+        const int pageSize = 100;
 
-        while (url is not null)
+        var firstPage = await FetchStatsPage(apiKey, $"{BaseUrl}/product-purchase-stats/?limit={pageSize}");
+        if (firstPage is null) return [];
+
+        var results = firstPage.Results.Select(MapToDto).ToList();
+
+        var totalPages = (int)Math.Ceiling((double)firstPage.Count / pageSize);
+        if (totalPages > 1)
         {
-            using var request = new HttpRequestMessage(HttpMethod.Get, url);
-            request.Headers.Authorization = new AuthenticationHeaderValue("AccessToken", apiKey);
+            var remainingPages = await Task.WhenAll(
+                Enumerable.Range(1, totalPages - 1).Select(i =>
+                    FetchStatsPage(apiKey, $"{BaseUrl}/product-purchase-stats/?limit={pageSize}&offset={i * pageSize}")));
 
-            var response = await httpClient.SendAsync(request);
-            response.EnsureSuccessStatusCode();
-
-            var page = await response.Content.ReadFromJsonAsync<KronanStatsPage>(JsonOptions);
-            if (page is null) break;
-
-            results.AddRange(page.Results.Select(r => new KronanProductStatsDto(
-                r.Id, r.Product.Name, r.Product.CategoryPath, r.PurchaseCount, r.QuantityPurchased,
-                r.AveragePurchaseQuantity, r.AveragePurchaseIntervalDays,
-                r.FirstPurchaseDate, r.LastPurchaseDate)));
-
-            url = page.Next;
+            foreach (var page in remainingPages.OfType<KronanStatsPage>())
+                results.AddRange(page.Results.Select(MapToDto));
         }
 
         return results;
     }
+
+    private async Task<KronanStatsPage?> FetchStatsPage(string apiKey, string url)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Authorization = new AuthenticationHeaderValue("AccessToken", apiKey);
+        var response = await httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<KronanStatsPage>(JsonOptions);
+    }
+
+    private static KronanProductStatsDto MapToDto(KronanStatItem r) => new(
+        r.Id, r.Product.Name, r.Product.CategoryPath, r.PurchaseCount, r.QuantityPurchased,
+        r.AveragePurchaseQuantity, r.AveragePurchaseIntervalDays,
+        r.FirstPurchaseDate, r.LastPurchaseDate);
 
     private record KronanStatsPage(int Count, string? Next, List<KronanStatItem> Results);
     private record KronanStatItem(int Id, KronanProductItem Product, int PurchaseCount,

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { fetchSettings } from "../api/settings";
 import { fetchKronanStats } from "../api/stats";
 import type { KronanProductStats } from "../types";
 
@@ -24,15 +23,20 @@ export function StatsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchSettings()
-      .then(async (settings) => {
-        setHasKronanKey(settings.hasKronanApiKey);
-        if (settings.hasKronanApiKey) {
-          const data = await fetchKronanStats();
-          setStats(data);
+    fetchKronanStats()
+      .then((data) => {
+        setHasKronanKey(true);
+        setStats(data);
+      })
+      .catch((err: unknown) => {
+        const msg = err instanceof Error ? err.message : "Failed to load stats.";
+        if (msg.includes("Krónan API key")) {
+          setHasKronanKey(false);
+        } else {
+          setHasKronanKey(true);
+          setError(msg);
         }
       })
-      .catch((err: unknown) => setError(err instanceof Error ? err.message : "Failed to load stats."))
       .finally(() => setLoading(false));
   }, []);
 

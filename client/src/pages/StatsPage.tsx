@@ -112,7 +112,7 @@ export function StatsPage() {
           return (
             <div key={category} className="bg-white border border-border rounded-lg p-4">
               <h2 className="text-lg font-semibold m-0 mb-4">{category}</h2>
-              <div style={{ height: chartHeight }} className="[&_svg]:outline-none">
+              <div style={{ height: chartHeight }} className="[&_svg]:outline-none [&_.recharts-wrapper]:outline-none">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={items} layout="vertical" margin={{ top: 0, right: 40, bottom: 0, left: 8 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
@@ -134,7 +134,7 @@ export function StatsPage() {
                         ];
                       }}
                     />
-                    <Bar dataKey="weeklyQty" name="Per week" fill="#BF6B3D" radius={[0, 3, 3, 0]} />
+                    <Bar dataKey="weeklyQty" name="Per week" fill="#c4a230" radius={[0, 3, 3, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

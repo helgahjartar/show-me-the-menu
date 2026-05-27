@@ -8,6 +8,7 @@ import RecipeDetailPage from "./pages/RecipeDetailPage";
 import MenuDetailPage from "./pages/MenuDetailPage";
 import SettingsPage from "./pages/SettingsPage";
 import { InventoryPage } from "./pages/InventoryPage";
+import { StatsPage } from "./pages/StatsPage";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/menus/:id" element={<MenuDetailPage />} />
           <Route path="/inventory" element={<InventoryPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/stats" element={<StatsPage />} />
         </Route>
       </Route>
     </Routes>

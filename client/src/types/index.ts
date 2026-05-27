@@ -145,3 +145,15 @@ export interface UpdateSettings {
   anthropicApiKey?: string;
   kronanApiKey?: string;
 }
+
+export interface KronanProductStats {
+  id: number;
+  productName: string;
+  categoryPath: string | null;
+  purchaseCount: number;
+  quantityPurchased: number;
+  averagePurchaseQuantity: number | null;
+  averagePurchaseIntervalDays: number | null;
+  firstPurchaseDate: string | null;
+  lastPurchaseDate: string | null;
+}

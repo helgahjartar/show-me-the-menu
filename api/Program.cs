@@ -120,5 +120,6 @@ app.MapWeeklyMenuEndpoints();
 app.MapAiEndpoints();
 app.MapSettingsEndpoints();
 app.MapInventoryEndpoints();
+app.MapStatsEndpoints();
 
 app.Run();

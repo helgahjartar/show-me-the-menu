@@ -1,10 +1,15 @@
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text.Json;
+using ShowMeTheMenu.Api.Dtos;
 
 namespace ShowMeTheMenu.Api.Services;
 
 public class KronanService(HttpClient httpClient, SettingsService settingsService)
 {
     private const string BaseUrl = "https://api.kronan.is/api/v1";
+
+    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
 
     public async Task AddToShoppingListAsync(IEnumerable<string> ingredients, string userId)
     {
@@ -35,4 +40,41 @@ public class KronanService(HttpClient httpClient, SettingsService settingsServic
             response.EnsureSuccessStatusCode();
         }
     }
+
+    public async Task<List<KronanProductStatsDto>> GetPurchaseStatsAsync(string userId)
+    {
+        var apiKey = await settingsService.GetKronanApiKeyAsync(userId);
+        if (string.IsNullOrWhiteSpace(apiKey))
+            throw new InvalidOperationException("No Krónan API key configured. Please add your Krónan API key in Settings.");
+
+        var results = new List<KronanProductStatsDto>();
+        string? url = $"{BaseUrl}/product-purchase-stats/?limit=50";
+
+        while (url is not null)
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, url);
+            request.Headers.Authorization = new AuthenticationHeaderValue("AccessToken", apiKey);
+
+            var response = await httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var page = await response.Content.ReadFromJsonAsync<KronanStatsPage>(JsonOptions);
+            if (page is null) break;
+
+            results.AddRange(page.Results.Select(r => new KronanProductStatsDto(
+                r.Id, r.Product.Name, r.Product.CategoryPath, r.PurchaseCount, r.QuantityPurchased,
+                r.AveragePurchaseQuantity, r.AveragePurchaseIntervalDays,
+                r.FirstPurchaseDate, r.LastPurchaseDate)));
+
+            url = page.Next;
+        }
+
+        return results;
+    }
+
+    private record KronanStatsPage(int Count, string? Next, List<KronanStatItem> Results);
+    private record KronanStatItem(int Id, KronanProductItem Product, int PurchaseCount,
+        int QuantityPurchased, double? AveragePurchaseQuantity, double? AveragePurchaseIntervalDays,
+        string? FirstPurchaseDate, string? LastPurchaseDate, bool IsIgnored);
+    private record KronanProductItem(string Sku, string Name, string? CategoryPath);
 }

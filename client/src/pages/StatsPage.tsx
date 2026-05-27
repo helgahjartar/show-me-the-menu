@@ -130,7 +130,7 @@ export function StatsPage() {
                         ];
                       }}
                     />
-                    <Bar dataKey="weeklyQty" name="Per week" fill="#D9430D" radius={[0, 3, 3, 0]} />
+                    <Bar dataKey="weeklyQty" name="Per week" fill="#BF6B3D" radius={[0, 3, 3, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

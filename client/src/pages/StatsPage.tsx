@@ -5,7 +5,6 @@ import {
 import { fetchKronanStats } from "../api/stats";
 import type { KronanProductStats } from "../types";
 
-const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
 
 function topLevelCategory(categoryPath: string | null): string {
   if (!categoryPath) return "Other";
@@ -73,18 +72,15 @@ export function StatsPage() {
     );
   }
 
-  const JAN_2026 = new Date("2026-01-01").getTime();
-  const weeksIn2026 = Math.max(1, (Date.now() - JAN_2026) / MS_PER_WEEK);
-
+  const twelveMonthsAgo = new Date();
+  twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1);
+  const windowStart = twelveMonthsAgo.getTime();
   const grouped = new Map<string, { name: string; weeklyQty: number; stat: KronanProductStats }[]>();
 
   for (const s of stats) {
-    if (s.lastPurchaseDate === null || new Date(s.lastPurchaseDate).getTime() < JAN_2026) continue;
+    if (s.lastPurchaseDate === null || new Date(s.lastPurchaseDate).getTime() < windowStart) continue;
 
-    const weeklyQty =
-      s.averagePurchaseIntervalDays && s.averagePurchaseQuantity !== null
-        ? (7 / s.averagePurchaseIntervalDays) * s.averagePurchaseQuantity
-        : s.quantityPurchased / weeksIn2026;
+    const weeklyQty = s.purchaseCount / 52;
 
     const category = topLevelCategory(s.categoryPath);
     if (!grouped.has(category)) grouped.set(category, []);
@@ -101,7 +97,7 @@ export function StatsPage() {
     <div>
       <h1 className="text-2xl sm:text-3xl leading-tight m-0 mb-6">Stats</h1>
       <p className="text-sm text-text-muted mb-6 mt-0">
-        Average weekly quantity per product — 2026. Products purchased in 2026, grouped by category.
+        How many times per week you buy each product on average, based on purchase history from the last 12 months.
       </p>
 
       <div className="flex flex-col gap-6">
@@ -129,8 +125,8 @@ export function StatsPage() {
                         const s = props.payload.stat as KronanProductStats;
                         const v = typeof value === "number" ? value : Number(value);
                         return [
-                          `${fmt(v)}/week (${s.quantityPurchased} total, ${s.purchaseCount} purchase${s.purchaseCount !== 1 ? "s" : ""})`,
-                          "Avg per week",
+                          `${fmt(v)}x/week (${s.purchaseCount} purchase${s.purchaseCount !== 1 ? "s" : ""} total)`,
+                          "Avg purchases/week",
                         ];
                       }}
                     />
